@@ -1,0 +1,26 @@
+ccpmint equ 224
+p_termcpm equ 0
+c_writestr equ 9
+
+cseg
+
+start:
+	mov cl, c_writestr
+	mov dx, offset Message
+	call ccpm
+
+	mov cl, p_termcpm
+	mov dx, 0
+	call ccpm
+
+ccpm:
+	int ccpmint
+	ret
+
+dseg
+org 100h
+
+Message db 'Hello, world!$'
+
+end
+
