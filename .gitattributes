@@ -1,2 +1,2 @@
-* linguist-vendored
 *.a86 linguist-language=Assembly
+*.a86 linguist-vendored=Assembly
