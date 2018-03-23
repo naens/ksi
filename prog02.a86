@@ -1,16 +1,81 @@
-C=^Z) @JP.EOT.			!Just in case
+ccpmint equ 224
+p_termcpm equ 0
+c_writestr equ 9
+f_open equ 15
+f_close equ 16
+f_read equ 20
+f_dmaoff equ 26
 
-0XS2					!Want to go through the following code at most
-!ALIGN!					!1-1/2 times.  Use Q2 for control.
-!
-!				1)
--EEM @EQY				!Convert M into empty text register
--EE@ .p,.p+24_RCm			!Put 24 chars from main buffer into M
--EEM  B  #@:S/||/||/  B			!Replicate each wild card char in M
-!				2)
--EEP					!Activate template/pattern buffer P
-!				3)
-(Q7<Q6)[Q7-Q6_L]			!Move cursor back if active cursor was
-!				4)
-.yXS9 .pXS3 0L Q3-.pXS4			!Save current position
-B (Q9-.
+cseg
+
+start:
+
+	; copy filename to fcb
+	mov cx, 0
+	mov di, offset fcb
+	mov si, 05ch
+fcbloop:
+	cmp cx, 16
+	jz  fcbend
+	mov dl, [si]
+	mov [di], dl
+	inc si
+	inc di
+	inc cx
+	jmp fcbloop
+fcbend:
+
+	; set current dma to dma in dseg
+	mov cl, f_dmaoff
+	mov dx, offset dma
+	call ccpm
+
+	; open the file
+	mov cl, f_open
+	mov dx, offset fcb
+	call ccpm
+	cmp al, 0
+	jnz error
+
+	; read the file
+	mov cl, f_read
+	mov dx, offset fcb
+	call ccpm
+	cmp al, 0
+	jnz error
+
+	; close the file
+	mov cl, f_close
+	mov dx, offset fcb
+	call ccpm
+	cmp al, 0
+	jnz error
+
+terminate:
+	; terminate the program
+	mov cl, p_termcpm
+	mov dx, 0
+	call ccpm
+
+error:
+	; error handling
+	; TODO: print cl and error number
+	mov cl, c_writestr
+	mov dx, offset errmsg
+	call ccpm
+	jmp terminate
+
+ccpm:
+	; TODO: save cl
+	int ccpmint
+	ret
+
+dseg
+org 100h
+errmsg	db	'error$'
+fcb	rs	33
+dma	rs	180
+
+
+end
+
