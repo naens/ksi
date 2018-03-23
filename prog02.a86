@@ -1,0 +1,16 @@
+C=^Z) @JP.EOT.			!Just in case
+
+0XS2					!Want to go through the following code at most
+!ALIGN!					!1-1/2 times.  Use Q2 for control.
+!
+!				1)
+-EEM @EQY				!Convert M into empty text register
+-EE@ .p,.p+24_RCm			!Put 24 chars from main buffer into M
+-EEM  B  #@:S/||/||/  B			!Replicate each wild card char in M
+!				2)
+-EEP					!Activate template/pattern buffer P
+!				3)
+(Q7<Q6)[Q7-Q6_L]			!Move cursor back if active cursor was
+!				4)
+.yXS9 .pXS3 0L Q3-.pXS4			!Save current position
+B (Q9-.
