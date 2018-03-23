@@ -72,10 +72,9 @@ ccpm:
 
 dseg
 org 100h
-errmsg	db	'error$'
+errmsg	db	'error',10,13,'$'
 fcb	rs	33
 dma	rs	180
-
 
 end
 
