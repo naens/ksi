@@ -1,6 +1,7 @@
 ccpmint equ 224
 p_termcpm equ 0
 c_writestr equ 9
+c_write equ 2
 f_open equ 15
 f_close equ 16
 f_read equ 20
@@ -59,22 +60,65 @@ terminate:
 
 error:
 	; error handling
-	; TODO: print cl and error number
+	mov tmp, ax
 	mov cl, c_writestr
 	mov dx, offset errmsg
-	call ccpm
+	int ccpmint
+	mov al, last_cl
+	call print_byte
+	mov cl, c_writestr
+	mov dx, offset erral
+	int ccpmint
+	mov ax, tmp
+	call print_byte
+	mov cl, c_writestr
+	mov dx, offset errah
+	int ccpmint
+	mov ax, tmp
+	mov al, ah
+	call print_byte
+	mov cl, c_writestr
+	mov dx, offset crlf
+	int ccpmint
 	jmp terminate
 
+print_byte:
+	; prints the two characters of a byte in al
+	push ax
+	and al, 0f0h
+	mov cl, 8
+	shr al, cl
+	call print_nibble
+	pop ax
+	and al, 0fh
+	call print_nibble
+	ret
+
+print_nibble:
+	; prints a single hexadecimal digit
+	; TODO: if al > 9 then print A..F
+	add al, 48
+	mov cl, c_write
+	mov dl, al
+	int ccpmint
+	ret
+
 ccpm:
-	; TODO: save cl
+	mov last_cl, cl
 	int ccpmint
 	ret
 
 dseg
 org 100h
-errmsg	db	'error',10,13,'$'
+
+errmsg	db	'error: function=$'
+erral	db	', al=$'
+errah	db	', ah=$'
+crlf	db	10,13,'$'
 fcb	rs	33
 dma	rs	180
-
+buf	rs	16
+tmp	rw	1
+last_cl	db	0
 end
 
