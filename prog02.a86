@@ -86,7 +86,7 @@ print_byte:
 	; prints the two characters of a byte in al
 	push ax
 	and al, 0f0h
-	mov cl, 8
+	mov cl, 4
 	shr al, cl
 	call print_nibble
 	pop ax
@@ -96,8 +96,13 @@ print_byte:
 
 print_nibble:
 	; prints a single hexadecimal digit
-	; TODO: if al > 9 then print A..F
-	add al, 48
+	cmp al, 9
+	jg pnib_af
+	add al, '0'
+	jmp pnib_w
+pnib_af:
+	add al, 'A'-10
+pnib_w:
 	mov cl, c_write
 	mov dl, al
 	int ccpmint
