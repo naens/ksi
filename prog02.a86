@@ -13,19 +13,11 @@ cseg
 start:
 
 	; copy filename to fcb
-	mov cx, 0
+	mov cx, 16
 	mov di, offset fcb
 	mov si, 05ch
-fcbloop:
-	cmp cx, 16
-	jz  fcbend
-	mov dl, [si]
-	mov [di], dl
-	inc si
-	inc di
-	inc cx
-	jmp fcbloop
-fcbend:
+	cld
+	rep movsb
 
 	; set current dma to dma in dseg
 	mov cl, f_dmaoff
@@ -48,9 +40,7 @@ read_loop:
 	cmp al, 0
 	jnz read_end
 
-	mov ax, readcnt
-	inc ax
-	mov readcnt, ax
+	inc readcnt
 	mov cl, c_writestr
 	mov dx, offset crlf
 	call ccpm
@@ -72,7 +62,7 @@ read_end:
 terminate:
 	; terminate the program
 	mov cl, p_termcpm
-	mov dx, 0
+	xor dx, dx
 	call ccpm
 
 error:
@@ -101,24 +91,18 @@ error:
 
 print_dma:
 	; fill lines of 16 bytes and prints each line
-	mov cx, 0
+	xor cl, cl
 	mov si, offset dma
-	mov di, offset buf
 pdmaloop:
-	mov ax, [si]
-	mov [di], ax
-	inc cx
-	inc si
-	inc di
-	mov ax, 0fh
-	and ax, cx
-	jnz pdmaloop
-	call print_line
-	cmp cx, 128
-	jz pdmaend
 	mov di, offset buf
-	jmp pdmaloop
-pdmaend:
+pdmalp_in:
+	movsb
+	inc cl
+	test cl, 15
+	jnz pdmalp_in
+	call print_line
+	cmp cl, 128
+	jnz pdmaloop
 	ret
 
 
@@ -138,7 +122,7 @@ print_line:
 
 	; print bytes
 	mov di, offset buf
-	mov cx, 0
+	xor cx, cx
 plbloop:
 	mov tmp, cx
 	mov al, [di]
@@ -187,9 +171,6 @@ print_word:
 	mov al, ah
 	call print_byte
 	pop ax
-	call print_byte
-	ret
-
 print_byte:
 	; prints the two characters of a byte in al
 	push ax
@@ -199,18 +180,13 @@ print_byte:
 	call print_nibble
 	pop ax
 	and al, 0fh
-	call print_nibble
-	ret
-
 print_nibble:
 	; prints a single hexadecimal digit
-	cmp al, 9
-	jg pnib_af
+	cmp al, 10
+	jb pnib
+	add al, 'A'-10-'0'
+pnib:
 	add al, '0'
-	jmp pnib_w
-pnib_af:
-	add al, 'A'-10
-pnib_w:
 	mov cl, c_write
 	mov dl, al
 	int ccpmint
