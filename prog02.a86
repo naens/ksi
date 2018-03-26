@@ -33,6 +33,13 @@ start:
 
 	; read the file
 	mov readcnt, 0
+	mov cl, f_read
+	mov dx, offset fcb
+	call ccpm
+	cmp al, 0
+	jnz read_end
+	call print_dma
+	inc readcnt
 read_loop:
 	mov cl, f_read
 	mov dx, offset fcb
@@ -40,13 +47,13 @@ read_loop:
 	cmp al, 0
 	jnz read_end
 
-	inc readcnt
+	mov cl, c_read
+	call ccpm
 	mov cl, c_writestr
 	mov dx, offset crlf
 	call ccpm
 	call print_dma
-	mov cl, c_read
-	call ccpm
+	inc readcnt
 	jmp read_loop
 read_end:
 	cmp al, 01h
@@ -105,16 +112,16 @@ pdmalp_in:
 	jnz pdmaloop
 	ret
 
-
 print_line:
 	; prints a single dma line: address, bytes, chars
-	; address = readcnt*128 + cx
+	; address = readcnt*128 + cx - 16
 	push cx
 	mov dx, cx
 	mov ax, readcnt
 	mov cl, 7
 	shl ax, cl
 	add ax, dx
+	sub ax, 16
 	call print_word
 	mov cl, c_write
 	mov dl, 32
