@@ -1,7 +1,8 @@
 ccpmint equ 224
 p_termcpm equ 0
-c_writestr equ 9
+c_read equ 1
 c_write equ 2
+c_writestr equ 9
 f_open equ 15
 f_close equ 16
 f_read equ 20
@@ -39,10 +40,26 @@ fcbend:
 	jnz error
 
 	; read the file
+	mov readcnt, 0
+read_loop:
 	mov cl, f_read
 	mov dx, offset fcb
 	call ccpm
 	cmp al, 0
+	jnz read_end
+
+	mov ax, readcnt
+	inc ax
+	mov readcnt, ax
+	mov cl, c_writestr
+	mov dx, offset crlf
+	call ccpm
+	call print_dma
+	mov cl, c_read
+	call ccpm
+	jmp read_loop
+read_end:
+	cmp al, 01h
 	jnz error
 
 	; close the file
@@ -81,6 +98,97 @@ error:
 	mov dx, offset crlf
 	int ccpmint
 	jmp terminate
+
+print_dma:
+	; fill lines of 16 bytes and prints each line
+	mov cx, 0
+	mov si, offset dma
+	mov di, offset buf
+pdmaloop:
+	mov ax, [si]
+	mov [di], ax
+	inc cx
+	inc si
+	inc di
+	mov ax, 0fh
+	and ax, cx
+	jnz pdmaloop
+	call print_line
+	cmp cx, 128
+	jz pdmaend
+	mov di, offset buf
+	jmp pdma_loop
+pdmaend:
+	ret
+
+
+print_line:
+	; prints a single dma line: address, bytes, chars
+	; address = readcnt*128 + cx
+	push cx
+	mov dx, cx
+	mov ax, readcnt
+	mov cl, 7
+	shl ax, cl
+	add ax, dx
+	call print_word
+	mov cl, c_write
+	mov dl, 32
+	call ccpm
+
+	; print bytes
+	mov di, offset buf
+	mov cx, 0
+plbloop:
+	mov tmp, cx
+	mov al, [di]
+	call print_byte
+	mov cl, c_write
+	mov dl, 32
+	call ccpm
+	mov cx, tmp
+	inc cx
+	inc di
+	cmp cx, 16
+	jnz plbloop
+
+	; print chars
+	mov di, offset buf
+	mov cx, 0
+plcloop:
+	mov tmp, cx
+	mov al, [di]
+	cmp al, 32
+	jb plcpdot
+	cmp al, 126
+	jbe plcpchr
+plcpdot:
+	mov al, '.'
+plcpchr:
+	mov cl, c_write
+	mov dl, al
+	call ccpm
+	mov cx, tmp
+	inc di
+	inc cx
+	cmp cx, 16
+	jb plcloop
+
+	; write crlf and return
+	mov cl, c_writestr
+	mov dx, offset crlf
+	call ccpm
+	pop cx
+	ret
+
+print_word:
+	; prints a word: the highest byte, then the lowest
+	push ax
+	mov al, ah
+	call print_byte
+	pop ax
+	call print_byte
+	ret
 
 print_byte:
 	; prints the two characters of a byte in al
@@ -124,6 +232,7 @@ fcb	rs	33
 dma	rs	180
 buf	rs	16
 tmp	rw	1
+readcnt	rw	1
 last_cl	db	0
 end
 
