@@ -117,7 +117,7 @@ pdmaloop:
 	cmp cx, 128
 	jz pdmaend
 	mov di, offset buf
-	jmp pdma_loop
+	jmp pdmaloop
 pdmaend:
 	ret
 
