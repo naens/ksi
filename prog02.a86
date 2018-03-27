@@ -49,6 +49,8 @@ read_loop:
 
 	mov cl, c_read
 	call ccpm
+	cmp al, 'q'
+	jz terminate
 	mov cl, c_writestr
 	mov dx, offset crlf
 	call ccpm
