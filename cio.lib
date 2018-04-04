@@ -1,0 +1,27 @@
+; Console Input/Output library
+; needs bdos.def
+
+cio_print_word:
+        ; prints word in ax in hexadecimal
+        push ax
+        mov al, ah
+        call cio_print_byte
+        pop ax
+cio_print_byte:
+        ; prints byte in al in hexadecimal
+        push ax
+        mov cl, 4
+        shr al, cl
+        call cio_print_nibble
+        pop ax
+        and al, 0fh
+cio_print_nibble:
+        ; prints the hexadecimal character (al must be < 16)
+        cmp al, 10
+        jb cio_print_dec_nibble
+        add al, 'A'-10-'0'
+cio_print_dec_nibble:
+        add al, '0'
+        mov cl, c_write
+        mov dl, al
+        int ccpmint
