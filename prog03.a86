@@ -1,0 +1,15 @@
+cseg
+
+include bdos.def
+include cio.lib
+
+
+
+dseg
+org 100h
+
+
+
+
+
+end
