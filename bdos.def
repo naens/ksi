@@ -1,0 +1,16 @@
+c_read          equ     1
+c_write         equ     2
+c_writestr      equ     9
+
+f_open          equ     15
+f_close         equ     16
+f_sfirst        equ     17
+f_snext         equ     18
+f_delete        equ     19
+f_read          equ     20
+f_write         equ     21
+f_make          equ     22
+
+p_termcpm       equ     0
+
+ccpmint         equ     224
