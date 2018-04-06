@@ -57,3 +57,66 @@ cons_print_bcd1:
         and al, 0fh
         call cons_print_dec_nibble
         ret
+
+cons_print_dec:
+        ; prints decimal number in ax
+        push bp
+        sub sp, 2
+        mov bp, sp
+        mov word ptr [bp], 0
+        mov dx, ax
+        mov cl, 0
+cons_pdloop:
+        cmp cl, 16
+        jz cons_pdpr
+        mov ax, word ptr [bp]
+        and ax, 0fh
+        cmp ax, 4
+        jle cons_pdlp1
+        add word ptr [bp], 3
+cons_pdlp1:
+        mov ax, word ptr [bp]
+        and ax, 0f0h
+        cmp ax, 40h
+        jle cons_pdlp2
+        add word ptr [bp], 30h
+cons_pdlp2:
+        mov ax, word ptr [bp]
+        and ax, 0f00h
+        cmp ax, 400h
+        jle cons_pdlp3
+        add word ptr [bp], 300h
+cons_pdlp3:
+        mov ax, word ptr [bp]
+        and ax, 0f000h
+        cmp ax, 4000h
+        jle cons_pdlp4
+        add word ptr [bp], 3000h
+cons_pdlp4:
+        shl word ptr [bp], 1
+        jnc cons_pdshld
+        shl dx, 1
+        jnc cons_pdincd
+        inc word ptr [bp]
+cons_pdincd:
+        inc dx
+        inc cl
+        jmp cons_pdloop
+cons_pdshld:
+        shl dx, 1
+        inc cl
+        jnc cons_pdloop
+cons_pdpr:
+        cmp dx, 0
+        jnz cons_pdfull
+        mov ax, word ptr [bp]
+        call cons_print_bcd_word
+cons_pdfull:
+        mov al, dl
+        call cons_print_dec_nibble
+        mov ax, word ptr [bp]
+        call cons_print_bcd_zeros
+cons_pdend:
+        add sp, 2
+        pop bp
+        ret
