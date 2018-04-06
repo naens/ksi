@@ -1,14 +1,35 @@
 cseg
 
-include bdos.def
-include cons.lib
-include str.lib
+        mov si, 80h
+        mov cl, [si]
+        inc si
+lp1:
+        mov dl, [si]
+        cmp cl, 0
+        jz prog03_end
+        cmp dl, '0'
+        jb lp1i
+        cmp dl, '9'
+        jg lp1i
+        jmp lp1e
+lp1i:
+        inc si
+        dec cl
+        jmp lp1
+lp1e:
+        call str_read_number
 
         mov cl, 5
         mov dl, 'G'
         int ccpmint
+
+prog03_end:
         mov cl, p_termcpm
         int ccpmint
+
+include bdos.def
+include cons.lib
+include str.lib
 
 dseg
 org 100h
