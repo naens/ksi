@@ -1,14 +1,20 @@
 cseg
 
 include bdos.def
-include cio.lib
+include cons.lib
+include str.lib
 
-
+        mov cl, 5
+        mov dl, 'G'
+        int ccpmint
+        mov cl, p_termcpm
+        int ccpmint
 
 dseg
 org 100h
 
 
+        call_num db 0
 
 
 
