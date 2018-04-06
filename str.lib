@@ -1,0 +1,22 @@
+; String library
+; String conversions and functions
+
+str_read_number:
+        ; reads decimal ascii number from [si] and puts into ax
+        xor ax, ax
+str_rnum_loop:
+        cmp byte [si], '0'
+        jb str_rnum_end
+        cmp byte [si], '9'
+        jg str_rnum_end
+        shl ax, 1
+        mov dx, ax
+        shl dx, 1
+        shl dx, 1
+        add ax, dx
+        add al, [si]
+        sub al, '0'
+        inc si
+        jmp str_rnum_loop
+str_rnum_end:
+        ret
