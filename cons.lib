@@ -124,6 +124,7 @@ cons_pdfull:
         mov al, dl
         call cons_print_dec_nibble
         mov ax, word ptr [bp]
+        mov dl, 1       ; must ensure that dl is not 0
         call cons_print_bcd_word
 cons_pdend:
         add sp, 2
