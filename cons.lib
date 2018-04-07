@@ -29,33 +29,39 @@ cons_print_dec_nibble:
         ret
 
 cons_print_bcd_word:
-        ; prints bcd word in ax without leading zeros
-        mov dx, ax
+        ; prints bcd word in ax, dl <> 0 => include leading zeros
+        push bp
+        push ax
+        mov bp, sp
+        cmp dl, 0
+        jnz cons_print_bcd4
         test ax, 0f000h
-        jnz cons_print_bcd_zeros
+        jnz cons_print_bcd4
         test ax, 0f00h
         jnz cons_print_bcd3
         test ax, 0f0h
         jnz cons_print_bcd2
         jmp cons_print_bcd1
-cons_print_bcd_zeros:
-        mov al, dh
+cons_print_bcd4:
+        mov al, 1[bp]
         mov cl, 4
         shr al, cl
         call cons_print_dec_nibble
 cons_print_bcd3:
-        mov al, dh
+        mov al, 1[bp]
         and al, 0fh
         call cons_print_dec_nibble
 cons_print_bcd2:
-        mov al, dl
+        mov al, [bp]
         mov cl, 4
         shr al, cl
         call cons_print_dec_nibble
 cons_print_bcd1:
-        mov al, dl
+        mov al, [bp]
         and al, 0fh
         call cons_print_dec_nibble
+        add sp, 2
+        pop bp
         ret
 
 cons_print_dec:
@@ -103,19 +109,22 @@ cons_pdincd:
         inc cl
         jmp cons_pdloop
 cons_pdshld:
-        shl dx, 1
         inc cl
+        shl dx, 1
         jnc cons_pdloop
+        inc word ptr [bp]
+        jmp cons_pdloop
 cons_pdpr:
         cmp dx, 0
         jnz cons_pdfull
         mov ax, word ptr [bp]
         call cons_print_bcd_word
+        jmp cons_pdend
 cons_pdfull:
         mov al, dl
         call cons_print_dec_nibble
         mov ax, word ptr [bp]
-        call cons_print_bcd_zeros
+        call cons_print_bcd_word
 cons_pdend:
         add sp, 2
         pop bp
