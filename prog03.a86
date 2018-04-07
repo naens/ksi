@@ -19,6 +19,10 @@ lp1i:
 lp1e:
         call str_read_number
 
+        call cons_print_dec
+
+        jmp prog03_end
+
         mov cl, 5
         mov dl, 'G'
         int ccpmint
