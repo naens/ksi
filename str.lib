@@ -1,20 +1,21 @@
-GGG; String library
+; String library
 ; String conversions and functions
 
 str_read_number:
-        ; reads decimal ascii number from [si] and puts into ax
-        xor ax, ax
-        mov cx, 10
+	; reads decimal ascii number from [si] and puts into ax
+	xor ax, ax
+	mov cx, 10
 str_rnum_loop:
-        mov dl, [si]
-        cmp dl, '0'
-        jb str_rnum_end
-        cmp dl, '9'
-        jg str_rnum_end
-        mul cx
-        add al, [si]
-        sub al, '0'
-        inc si
-        jmp str_rnum_loop
+	mov dl, [si]
+	cmp dl, '0'
+	jb str_rnum_end
+	cmp dl, '9'
+	jg str_rnum_end
+	mul cx
+	add al, [si]
+	sub al, '0'
+	inc si
+	jmp str_rnum_loop
 str_rnum_end:
-        ret
+	ret
+

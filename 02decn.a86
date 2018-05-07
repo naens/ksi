@@ -1,0 +1,46 @@
+cseg
+	mov si, 80h	; The location of the command line tail
+	mov cl, [si]	; [80h] contains the length of the command line
+	inc si		; skip the length, go to the characters
+lp1:
+	; skip non-digit characters, [si] must contain the first digit
+	mov dl, [si]
+	cmp cl, 0
+	jz prog03_end
+	cmp dl, '0'
+	jb lp1i
+	cmp dl, '9'
+	jg lp1i
+	jmp lp1e
+lp1i:
+	inc si
+	dec cl
+	jmp lp1
+lp1e:
+	; read the number starting from [si], put into ax
+	call str_read_number
+
+	; print the number in ax in decimal format
+	call cons_print_dec
+
+	jmp prog03_end
+
+	mov cl, 5
+	mov dl, 'G'
+	int ccpmint
+
+prog03_end:
+	mov cl, p_termcpm
+	int ccpmint
+
+include bdos.def
+include cons.lib
+include str.lib
+
+dseg
+org 100h
+
+	call_num db 0
+
+end
+
