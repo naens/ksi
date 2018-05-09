@@ -14,4 +14,3 @@ f_make		equ	22
 p_termcpm	equ	0
 
 ccpmint		equ	224
-

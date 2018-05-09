@@ -18,4 +18,3 @@ str_rnum_loop:
 	jmp str_rnum_loop
 str_rnum_end:
 	ret
-
