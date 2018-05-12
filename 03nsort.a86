@@ -1,0 +1,53 @@
+cseg
+	; init
+	mov di, 0
+	mov si, 0
+
+	; read cli, store in array
+whrd:
+	mov ah, 0
+	mov al, cli_len
+	cmp si, ax
+	jge whrde
+
+	; find first digit
+whfnd:
+	cmp cli_tail[si], '0'
+	jb whfndtl
+	cmp cli_tail[si], '9'
+	jg whfndtl
+	jmp whfnde
+whfndtl:
+	mov ah, 0
+	mov al, cli_len
+	cmp si, ax
+	jge whfnde
+	inc si
+	jmp whfnd
+whfnde:
+
+	mov ah, 0
+	mov al,cli_len
+	jge whrd
+	call str_read_number
+	mov a[di], ax
+	add di, 2
+	jmp whrd
+whrde:
+	mov dx, di
+
+
+include bdos.def
+include cons.lib
+include str.lib
+
+dseg
+org 80h
+	cli_len rs 1
+	cli_tail rs 127
+
+org 100h
+
+	call_num db 0
+	a rw 100
+end
