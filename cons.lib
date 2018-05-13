@@ -130,3 +130,11 @@ cons_pdend:
 	add sp, 2
 	pop bp
 	ret
+
+cons_crlf:
+	mov cl, c_write
+	mov dl, 0dh
+	int ccpmint
+	mov cl, c_write
+	mov dl, 0ah
+	int ccpmint
