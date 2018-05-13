@@ -1,33 +1,36 @@
 cseg
-	; init
+	; index for a in di
 	mov di, 0
-	mov si, 0
+
+	; set si to cli_tail
+	lea si, byte ptr cli_tail
+
+	; set n to cli_tail+cli_len
+	mov ah, 0
+	mov al, cli_len
+	mov n, si
+	add n, ax
 
 	; read cli, store in array
 whrd:
-	mov ah, 0
-	mov al, cli_len
-	cmp si, ax
+	cmp si, n
 	jge whrde
 
 	; find first digit
 whfnd:
-	cmp cli_tail[si], '0'
+	cmp byte ptr [si], '0'
 	jb whfndtl
-	cmp cli_tail[si], '9'
+	cmp byte ptr [si], '9'
 	jg whfndtl
 	jmp whfnde
 whfndtl:
-	mov ah, 0
-	mov al, cli_len
-	cmp si, ax
+	cmp si, n
 	jge whfnde
 	inc si
 	jmp whfnd
 whfnde:
 
-	mov ah, 0
-	mov al,cli_len
+	cmp si, n
 	jge whrd
 	call str_read_number
 	mov a[di], ax
@@ -36,6 +39,51 @@ whfnde:
 whrde:
 	mov dx, di
 
+
+	; sort
+	mov di, 0
+	sub dx, 2
+	mov n, dx
+
+whsrt:
+	cmp di, n
+	jge whsrte
+	mov si, di
+	add si, 2
+whsrtw:
+	cmp si, n
+	jg whsrtwe
+	mov ax, a[di]
+	cmp ax, a[si]
+	jb whsrtwi
+	mov cx, a[si]
+	mov a[si], ax
+	mov a[di], cx
+
+whsrtwi:
+	add si, 2
+	jmp whsrtw
+whsrtwe:
+
+	add di, 2
+	jmp whsrt
+whsrte:
+	; end of sort while loop
+
+	; print
+	mov di, 0
+
+whprt:
+	cmp di, n
+	jg whprte
+	mov ax, a[di]
+	call cons_print_dec
+	call cons_crlf
+	add di, 2
+	jmp whprt
+whprte:
+	mov cl, p_termcpm
+	int ccpmint
 
 include bdos.def
 include cons.lib
@@ -47,7 +95,7 @@ org 80h
 	cli_tail rs 127
 
 org 100h
-
 	call_num db 0
+	n rw 1
 	a rw 100
 end
