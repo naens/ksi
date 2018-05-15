@@ -1,3 +1,0 @@
-#+TITLE: The Ksi Project
-
-This is the Ksi project.
