@@ -3,7 +3,7 @@ cseg
 	mov di, 0
 
 	; set si to cli_tail
-	lea si, byte ptr cli_tail
+	mov si, offset cli_tail
 
 	; set n to cli_tail+cli_len
 	mov ah, 0
