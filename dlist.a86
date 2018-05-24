@@ -1,0 +1,34 @@
+; dlist program: lists files of directory with sizes
+
+a_max	equ	100h
+fn_sz	equ	12
+
+	cseg
+
+
+
+
+include bdos.def
+include cons.lib
+include str.lib
+
+	dseg
+	org	5ch
+
+fcb	rb	36		; the fcb for f_sfirst and f_snext
+
+
+	org	80h
+
+dma_buf	rb	80h		; dma buffer to read file names from
+
+
+	org 100h
+
+a	rw	a_max		; the array of pointers to strings
+a_len	db	0		; the current length of a in words
+s	rb	a_max * fn_sz	; the array of null-terminated strings
+s_next	rw	offset s	; offset for the next string in s
+
+
+end
