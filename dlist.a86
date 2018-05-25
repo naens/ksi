@@ -5,12 +5,76 @@ fn_sz	equ	12
 
 	cseg
 
+	; read the file names
+	mov	cl, f_sfirst
+	mov	dx, offset fcb
+	call	ccpm		; call f_sfirst
 
+	cmp	al, 0ffh
+	je	exit		; if no file, exit
+
+	mov	si, offset dma_buf
+	mov	cl, 5
+	shl	al, cl
+	add	si, ax
+	inc	si		; si := addr(dma_buf) + al * 32 + 1
+
+	mov	di, s_next
+	call	fn_convert		; copy file name to s_next
+	mov	byte ptr [di], 0	; end of string marker
+	mov	si, offset a
+	mov	[si], di		; a[0] := s_next
+	inc	di		; value for the next s_next
+	mov	s_next, di
+	inc	a_len
+
+exit:
+	; exit
+	mov	cl, p_termcpm
+	call	ccpm
+
+	; convert 11-character filenames to <name><'.'><ext>
+fn_convert:
+	; copy the file name
+	cld
+	mov	cx, 8
+
+fn_conv_lp1:
+	movsb
+	dec	cx
+	jz	fn_conv_ext
+	cmp	byte ptr [si], ' '
+	jne	fn_conv_lp1
+
+	; adjust si to point to the extension
+	add	si, cx
+
+	; test whether there is an extension
+fn_conv_ext:
+	cmp	byte ptr [si], ' '
+	je	fn_conv_end
+
+	; copy the extension
+	mov	byte ptr [di], '.'
+	inc	di
+	mov	cx, 3
+
+fn_conv_lp2:
+	movsb
+	dec	cx
+	jz	fn_conv_end
+	cmp	byte ptr [si], ' '
+	jne	fn_conv_lp2
+
+fn_conv_end:
+	ret
 
 
 include bdos.def
 include cons.lib
 include str.lib
+include sys.lib
+
 
 	dseg
 	org	5ch
