@@ -1,0 +1,5 @@
+; library containing functions to interact with the system
+
+	; ccpm
+ccpm:
+	int	ccpmint
