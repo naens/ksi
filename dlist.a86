@@ -13,20 +13,36 @@ fn_sz	equ	12
 	cmp	al, 0ffh
 	je	exit		; if no file, exit
 
+rd_fn_cont:
 	mov	si, offset dma_buf
 	mov	cl, 5
 	shl	al, cl
 	add	si, ax
-	inc	si		; si := addr(dma_buf) + al * 32 + 1
+	inc	si			; si:=addr(dma_buf)+al*32+1
 
 	mov	di, s_next
 	call	fn_convert		; copy file name to s_next
 	mov	byte ptr [di], 0	; end of string marker
-	mov	si, offset a
-	mov	[si], di		; a[0] := s_next
-	inc	di		; value for the next s_next
-	mov	s_next, di
+	inc	di			; value for the next s_next
+
+	mov	ax, s_next
+	mov	si, a_len
+	shl	si, 1
+	mov	a[si], ax		; a[a_len] := s_next
 	inc	a_len
+
+	mov	cl, f_snext
+	mov	dx, offset fcb
+	call	ccpm			; call f_snext
+
+	cmp	al, 0ffh
+	je	rd_fn_end
+	mov	ax, a_len
+	cmp	ax, a_max
+	jb	rd_fn_cont		; if not at end, continue
+
+rd_fn_end:
+
 
 exit:
 	; exit
@@ -90,7 +106,7 @@ dma_buf	rb	80h		; dma buffer to read file names from
 	org 100h
 
 a	rw	a_max		; the array of pointers to strings
-a_len	db	0		; the current length of a in words
+a_len	dw	0		; the current length of a in words
 s	rb	a_max * fn_sz	; the array of null-terminated strings
 s_next	rw	offset s	; offset for the next string in s
 
