@@ -1,1 +1,1 @@
-NDMenu.OnSectionLoaded("files.js",[[1,"strings.lib"]]);
+NDMenu.OnSectionLoaded("files.js",[[1,"strings.lib"],[1,"system.lib"]]);

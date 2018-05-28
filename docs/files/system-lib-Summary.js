@@ -1,0 +1,1 @@
+NDFramePage.OnPageTitleLoaded("File:system.lib","system.lib");NDSummary.OnSummaryLoaded("File:system.lib",[["Assembly","Assembly"]],[["Functions","Function"],["Groups","Group"],["Libraries","Library"]],[[5,0,1,"Libraries","Libraries"],[6,0,2,"System","System"],[7,0,1,"Functions","Functions"],[8,0,0,"ccpm","ccpm"]]);
