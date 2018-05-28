@@ -59,7 +59,7 @@ var indexSectionsWithContent = {
       "Y": false,
       "Z": false
       },
-   "Libraries": {
+   "Functions": {
       "Symbols": false,
       "Numbers": false,
       "A": false,
@@ -89,7 +89,7 @@ var indexSectionsWithContent = {
       "Y": false,
       "Z": false
       },
-   "Functions": {
+   "Libraries": {
       "Symbols": false,
       "Numbers": false,
       "A": false,
