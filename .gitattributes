@@ -1,3 +1,5 @@
 *.a86 linguist-language=Assembly
 *.def linguist-language=Assembly
 *.lib linguist-language=Assembly
+docs/* liguist-documentation
+nd-project/* linguist-generated=true
