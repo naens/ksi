@@ -17,20 +17,25 @@
 ;;
 ;;     si, cx, dx
 ;;
+; Function works the following way
+;	ax := 0
+;	while (dx := [si]) in '0'..'9' do:
+;	    ax := ax * 10 + (dx - '0')
+;
 strings_read_number:
 	mov	ax, 0
-	mov	dh, 0
-	mov	cx, 10
+	mov	dh, 0		; upper byte of dx, unused
+	mov	cx, 10		; represents the constant 10
 strings_read_number_loop:
 	mov	dl, [si]
-	sub	dl, '0'
+	cmp	dl, '0'
 	jb	strings_read_number_end
-	cmp	dl, 9
+	cmp	dl, '9'
 	jg	strings_read_number_end
 	mul	cx
+	sub	dl, '0'
 	add	ax, dx
 	inc	si
 	jmp	strings_read_number_loop
 strings_read_number_end:
 	ret
-
