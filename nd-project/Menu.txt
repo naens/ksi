@@ -53,6 +53,6 @@ Group: Index  {
    Index: Everything
    File Index: Files
    Function Index: Functions
-   Library Index: Library
+   Library Index: Libraries
    }  # Group: Index
 

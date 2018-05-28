@@ -1,12 +1,12 @@
 1.52
 Assembly
-/home/andrei/gproj/ksi/dlist.a86	1527529710	0	/home/andrei/gproj/ksi/dlist.a86
-/home/andrei/gproj/ksi/bdos.def	1527529267	0	/home/andrei/gproj/ksi/bdos.def
-/home/andrei/gproj/ksi/decn.a86	1527529710	0	/home/andrei/gproj/ksi/decn.a86
-/home/andrei/gproj/ksi/hello.a86	1527529710	0	/home/andrei/gproj/ksi/hello.a86
-/home/andrei/gproj/ksi/nsort.a86	1527529710	0	/home/andrei/gproj/ksi/nsort.a86
 /home/andrei/gproj/ksi/console.lib	1527529267	0	/home/andrei/gproj/ksi/console.lib
 /home/andrei/gproj/ksi/strings.lib	1527529394	1	/home/andrei/gproj/ksi/strings.lib
-/home/andrei/gproj/ksi/system.lib	1527368074	0	/home/andrei/gproj/ksi/system.lib
-/home/andrei/gproj/ksi/dump.a86	1527529710	0	/home/andrei/gproj/ksi/dump.a86
 /home/andrei/gproj/ksi/readme.txt	1527530725	0	/home/andrei/gproj/ksi/readme.txt
+/home/andrei/gproj/ksi/dump.a86	1527529710	0	/home/andrei/gproj/ksi/dump.a86
+/home/andrei/gproj/ksi/decn.a86	1527529710	0	/home/andrei/gproj/ksi/decn.a86
+/home/andrei/gproj/ksi/hello.a86	1527529710	0	/home/andrei/gproj/ksi/hello.a86
+/home/andrei/gproj/ksi/bdos.def	1527529267	0	/home/andrei/gproj/ksi/bdos.def
+/home/andrei/gproj/ksi/dlist.a86	1527529710	0	/home/andrei/gproj/ksi/dlist.a86
+/home/andrei/gproj/ksi/nsort.a86	1527529710	0	/home/andrei/gproj/ksi/nsort.a86
+/home/andrei/gproj/ksi/system.lib	1527368074	0	/home/andrei/gproj/ksi/system.lib
