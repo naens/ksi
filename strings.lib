@@ -1,41 +1,47 @@
-;; Library: Strings
-;; String conversions and functions
+; Library: Strings
+; String conversions and functions
 
-;; Function: strings_read_number
-;;
-;;     Reads a decimal ascii number from [si] and puts into ax
-;;
-;; Parameters:
-;;
-;;     si - the starting address of the string representing the ascii number
-;;
-;; Returns:
-;;
-;;     ax - the binary representation of the number read
-;;
-;; Modified Registers:
-;;
-;;     si, cx, dx
-;;
-; Function works the following way
+;====
+;
+; Function: strings@to_number
+;
+;     Reads a decimal ascii number from [si] and puts into ax
+;
+; Parameters:
+;
+;     si - address of the string representing the ascii number
+;
+; Returns:
+;
+;     ax - binary representation of the number read
+;
+; Modified Registers:
+;
+;     si, cx, dx
+;
+;====
+
+; string to number algorithm:
 ;	ax := 0
 ;	while (dx := [si]) in '0'..'9' do:
 ;	    ax := ax * 10 + (dx - '0')
-;
-strings_read_number:
+
+strings@to_number:
 	mov	ax, 0
-	mov	dh, 0		; upper byte of dx, unused
-	mov	cx, 10		; represents the constant 10
-strings_read_number_loop:
+	mov	dh, 0				; upper byte of dx
+	mov	cx, 10				; constant 10
+
+strings@to_number@loop:
 	mov	dl, [si]
 	cmp	dl, '0'
-	jb	strings_read_number_end
+	jb	strings@to_number@end		; exit loop if below '0'
 	cmp	dl, '9'
-	jg	strings_read_number_end
-	mul	cx
+	jg	strings@to_number@end		; exit loop if above '9'
+	mul	cx				; ax := ax * (cx = 10)
 	sub	dl, '0'
-	add	ax, dx
+	add	ax, dx				; ax := ax + (dx - '0')
 	inc	si
-	jmp	strings_read_number_loop
-strings_read_number_end:
+	jmp	strings@to_number@loop
+strings@to_number@end:
 	ret
+
