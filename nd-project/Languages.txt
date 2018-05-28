@@ -116,3 +116,4 @@ Format: 1.52
 Alter Language: Assembly
 
    Add Extensions: a86 def lib
+   Line Comment: ;;
