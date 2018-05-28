@@ -1,3 +1,3 @@
 #!/bin/sh
 
-naturaldocs -i . -o HTML docs -p nd-project
+naturaldocs -i . -p nd-project -o HTML docs

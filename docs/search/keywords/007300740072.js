@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("str",["Library","Function"],[["Strings",,[[,,,,0,"File:strings.lib:Strings"]]],["strings@to_number",,[[,,,,1,"File:strings.lib:strings@to_number"]]]]);
