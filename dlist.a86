@@ -87,9 +87,9 @@ fn_conv_end:
 
 
 include bdos.def
-include cons.lib
-include str.lib
-include sys.lib
+include console.lib
+include strings.lib
+include system.lib
 
 
 	dseg

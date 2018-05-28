@@ -1,0 +1,36 @@
+;; Library: Strings
+;; String conversions and functions
+
+;; Function: strings_read_number
+;;
+;;     Reads a decimal ascii number from [si] and puts into ax
+;;
+;; Parameters:
+;;
+;;     si - the starting address of the string representing the ascii number
+;;
+;; Returns:
+;;
+;;     ax - the binary representation of the number read
+;;
+;; Modified Registers:
+;;
+;;     si, cx, dx
+;;
+strings_read_number:
+	mov	ax, 0
+	mov	dh, 0
+	mov	cx, 10
+strings_read_number_loop:
+	mov	dl, [si]
+	sub	dl, '0'
+	jb	strings_read_number_end
+	cmp	dl, 9
+	jg	strings_read_number_end
+	mul	cx
+	add	ax, dx
+	inc	si
+	jmp	strings_read_number_loop
+strings_read_number_end:
+	ret
+
