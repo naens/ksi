@@ -1,7 +1,9 @@
-Common Files:
- * BDOS.DEF: bdos constants
- * CONS.LIB: subroutines for console
- * STR.LIB: subroutines for strings.
+Constants:
+ * bdos.def: bdos constants
+
+Libraries
+ * console.lib: subroutines for console
+ * strings.lib: subroutines for strings.
 
 Programs:
  * hello
