@@ -1,5 +1,32 @@
-; library containing functions to interact with the system
+; Library: System
+; Library containing functions to interact with the system
 
-	; ccpm
+;====
+;
+; Function: ccpm
+;
+;     Calls the Operating System
+;
+; Parameters:
+;
+;     cl - System Call Number
+;     dl or dx - Parameter
+;     ds:dx - Address
+;
+; Returns:
+;
+;     al or ax - Return Value
+;     es:ax - Return Address
+;     bx - Same as ax
+;     cx - Error Code
+;
+; Preserved Registers:
+;
+;     - si, di, bp, sp, ss, ds, cs
+;     - es, when not used to hold a return segment value
+;
+;====
+
 ccpm:
 	int	ccpmint
+
