@@ -22,6 +22,8 @@ Alter Language: Assembly
 
    Add Extensions: a86 def lib
 
+   Line Comment: ;; ;
+
 
 # These settings define the languages Natural Docs knows how to parse.  You
 # can define your own here or override the settings of the existing ones.

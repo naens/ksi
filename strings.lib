@@ -1,30 +1,38 @@
-; Library: Strings
-; String conversions and functions
+;; Library: Strings
+;; String conversions and functions
 
-;====
+;;====
+;;
+;; Function: strings@to_number
+;;
+;;     Reads a decimal ascii number from [si] and puts into ax
+;;
+;; Parameters:
+;;
+;;     si - address of the string representing the ascii number
+;;
+;; Returns:
+;;
+;;     ax - binary representation of the number read
+;;
+;; Modified Registers:
+;;
+;;     si, cx, dx
+;;
+;;====
 ;
-; Function: strings@to_number
+; Register Usage:
 ;
-;     Reads a decimal ascii number from [si] and puts into ax
+;     si - decimal ascii representation of the number
+;     dx - current byte
+;     cx - constant 10, used for multiplication
+;     ax - accumulator and return value
 ;
-; Parameters:
-;
-;     si - address of the string representing the ascii number
-;
-; Returns:
-;
-;     ax - binary representation of the number read
-;
-; Modified Registers:
-;
-;     si, cx, dx
-;
-;====
-
-; string to number algorithm:
+; Pseudocode:
 ;	ax := 0
 ;	while (dx := [si]) in '0'..'9' do:
 ;	    ax := ax * 10 + (dx - '0')
+;
 
 strings@to_number:
 	mov	ax, 0

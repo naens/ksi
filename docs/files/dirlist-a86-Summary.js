@@ -1,0 +1,1 @@
+NDFramePage.OnPageTitleLoaded("File:dirlist.a86","dirlist.a86");NDSummary.OnSummaryLoaded("File:dirlist.a86",[["Assembly","Assembly"]],[["Files","File"],["Functions","Function"],["Groups","Group"]],[[9,0,0,"DirList","DirList"],[10,0,2,"Functions","Functions"],[12,0,1,"filename_convert","filename_convert"]]);

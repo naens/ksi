@@ -1,0 +1,176 @@
+;; Program: DirList
+;; Lists files of directory with sizes
+
+a_max	equ	100h
+fn_sz	equ	12
+
+	cseg
+
+	; read the file names
+	mov	cl, f_sfirst
+	mov	dx, offset fcb
+	call	ccpm		; call f_sfirst
+
+	cmp	al, 0ffh
+	je	exit		; if no file, exit
+
+rd_fn_cont:
+	mov	si, offset dma_buf
+	mov	cl, 5
+	shl	al, cl
+	add	si, ax
+	inc	si			; si:=addr(dma_buf)+al*32+1
+
+	mov	di, s_next
+	call	fn_convert		; copy file name to s_next
+	mov	byte ptr [di], 0	; end of string marker
+	inc	di			; value for the next s_next
+
+	mov	ax, s_next
+	mov	si, a_len
+	shl	si, 1
+	mov	a[si], ax		; a[a_len] := s_next
+	inc	a_len
+
+	mov	cl, f_snext
+	mov	dx, offset fcb
+	call	ccpm			; call f_snext
+
+	cmp	al, 0ffh
+	je	rd_fn_end
+	mov	ax, a_len
+	cmp	ax, a_max
+	jb	rd_fn_cont		; if not at end, continue
+
+rd_fn_end:
+
+
+exit:
+	; exit
+	mov	cl, p_termcpm
+	call	ccpm
+
+;;====
+;;
+;; Function: filename_convert
+;;
+;;     Converts 11-character filenames to <name><'.'><ext>.
+;;     The result is null-terminated.  The length of the
+;;     string is returned in ax.
+;;
+;; Parameters:
+;;
+;;     si - The address of the source string
+;;     di - The address of the destination
+;;
+;; Returns:
+;;
+;;    ax - The length of the destination string (without the null-byte)
+;;
+;; Modified Registers:
+;;
+;;     si, di, ax, bx, cx
+;;
+;;====
+;
+; Register Usage:
+;
+;     si - pointer to the current character in the source string
+;     di - pointer to the current character in the destination string
+;     cx - counter
+;     bx - saves the initial value of dx
+;     ax - used for return of the length of the result string
+;
+; Pseudocode:
+;
+; bx = di
+; cx = 8
+; while cx > 0 do	// @name
+;     [di++] = [si++]
+;     cx--
+;     if [si] == ' ' then
+;         break
+; end
+; si += cx
+; if [si] <> ' ' then	// @test_extension
+;     cx = 3
+;     [di] = '.'
+;     di++
+;     while cx > 0	// @extension
+;         [di++] = [si++]
+;         cx--
+;         if [si] == ' 'then
+;             break
+;     end
+; [di] = 0		// @end
+; return di - bx
+;
+filename_convert:
+	; copy the file name
+	cld
+	mov	cx, 8
+	mov	bx, di		; save destination address
+
+filename_convert@name:
+	movsb
+	dec	cx
+	jz	filename_convert@test_extension
+	cmp	byte ptr [si], ' '
+	jne	filename_convert@name
+
+	; adjust si to point to the extension
+	add	si, cx
+
+	; test whether there is an extension
+filename_convert@test_extension:
+	cmp	byte ptr [si], ' '
+	je	filename_convert@end
+
+	; copy the extension
+	mov	byte ptr [di], '.'
+	inc	di
+	mov	cx, 3
+
+filename_convert@extension:
+	movsb
+	dec	cx
+	jz	filename_convert@end
+	cmp	byte ptr [si], ' '
+	jne	filename_convert@extension
+
+filename_convert@end:
+	; put null byte
+	mov	[di], 0
+
+	; return ax = length of the destination string
+	sub	di, bx
+	mov	ax, di
+	ret
+
+
+include bdos.def
+include console.lib
+include strings.lib
+include system.lib
+
+
+	dseg
+	org	5ch
+
+fcb	rb	36		; the fcb for f_sfirst and f_snext
+
+
+	org	80h
+
+dma_buf	rb	80h		; dma buffer to read file names from
+
+
+	org 100h
+
+a	rw	a_max		; the array of pointers to strings
+a_len	dw	0		; the current length of a in words
+s	rb	a_max * fn_sz	; the array of null-terminated strings
+s_next	rw	offset s	; offset for the next string in s
+
+end
+
