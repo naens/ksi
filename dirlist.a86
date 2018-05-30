@@ -1,49 +1,208 @@
 ;; Program: DirList
 ;; Lists files of directory with sizes
 
-a_max	equ	100h
-fn_sz	equ	12
+array_maxlen	equ	100h
+filename_size	equ	11
 
-	cseg
+;;====
+;;
+;; Function: main
+;;
+;;     Displays the contents of the directory provided as argument.
+;;     If no argument provided, displays the contents of the current
+;;     directory.  Also displays the sizes of each file.  The list of
+;;     files is sorted by the name of the file.  The filenames are
+;;     displayed in /name-dot-extension/ format or just the name
+;;     if the file has no extension.
+;;
+;; Parameters:
+;;
+;;     command line arguments - the directory and the filename.  Both are
+;;     optional.  The filename can be ambiguous (containing ? and/or *).
+;;     The default directory is the current and the default filename
+;;     matches any file.
+;;
+;; Returns:
+;;
+;;     nothing
+;;
+;; Side Effects:
+;;
+;;     Prints the list of filenames on the default console.
+;;
+;;====
+;
+; Pseudocode:
+;
+;     if no arguments, match any file
+;     copy filenames to array in /name-dot-extension/ format.
+;     sort filenames in the array alphabetically
+;     for each filename in the array:
+;         display filename
+;         display size
+;         do crlf
+;
 
-	; read the file names
+	dseg
+	org	5ch
+fcb	rb	36		; the fcb for f_sfirst and f_snext
+
+	org	80h
+dma_buf	rb	80h		; dma buffer to read filenames from
+
+	org 100h
+a	rw	a_max		; the array of pointers to strings
+a_len	dw	0		; the current length of a in words
+s	rb	a_max * fn_sz	; the array of null-terminated strings
+s_next	rw	offset s	; offset for the next string in s
+
+;;====
+;;
+;; Function: read_filenames
+;;
+;;     Reads the file names using *f_sfirst* and *f_snext* system calls
+;;     copies them into the array.  The filenames are null-terminated
+;;     strings.
+;;
+;; Parameters:
+;;
+;;     ax - The address of the array for the pointers to the filenames.
+;;
+;; Returns:
+;;
+;;     ax - The number of filenames in the array.
+;;
+;; Side Effects:
+;;
+;;     The array contains the addresses of filenames.
+;;
+;; Modified Registers:
+;;
+;;     si, di, ax, bx, cx
+;;
+;;====
+;
+; Private Variables:
+;
+;     array_offset - address of the array
+;     buffer - array of bytes, used for containing filenames.
+;              Its size is 12 times maximum amount of file names.
+;     buffer_length - current length of the buffer
+;     array_length - current length of the array
+;     string_length - length of the current string
+;
+; Pseudocode:
+;
+;     // initialize
+;     array_length := 0
+;     buffer_length := 0
+;
+;     // get the first filename
+;     call f_sfirst
+;     if no file then
+;         return 0
+;
+;     // get the rest of the filenames
+;     loop:
+;
+;         // copy filename to array
+;         length := filename_convert(&fcb, &array[array_length])
+;
+;         // update array and array length variables
+;         array[array_length] := offset buffer + buffer_length
+;         array_length := array_length + 1
+;
+;         // update buffer length
+;         buffer_length := buffer_length + length + 1
+;
+;         // test if enough space in the array
+;         if array_length = array_maxlen, then
+;             return array_maxlen
+;
+;         // get the next file name
+;         call f_snext
+;         if no file then
+;             break loop
+;
+;         // continue
+;         continue loop
+;
+;     return array_length
+;
+	dseg $
+read_filenames@array_offset	rw	1
+read_filenames@array_length	rw	1
+read_filenames@buffer		db    array_maxlen * (filename_size + 1)
+read_filenames@buffer_length	rw	1
+read_filenames@string_length	rw	1
+
+	cseg $
+	; initialize
+	mov	read_filenames@array_offset, ax
+	mov	read_filenames@array_length, 0
+	mov	read_filenames@buffer_length, 0
+
+	; get the first filename
 	mov	cl, f_sfirst
 	mov	dx, offset fcb
-	call	ccpm		; call f_sfirst
+	call	ccpm
 
+	; if no file, return 0
 	cmp	al, 0ffh
-	je	exit		; if no file, exit
+	je	read_filenames@end
 
-rd_fn_cont:
+	; get the rest of the filenames
+read_filenames@loop:
+
+	; set si to the address of the filename
+	; si := offset dma_buf + al * 32 + 1
 	mov	si, offset dma_buf
 	mov	cl, 5
 	shl	al, cl
 	add	si, ax
-	inc	si			; si:=addr(dma_buf)+al*32+1
+	inc	si
 
-	mov	di, s_next
-	call	fn_convert		; copy file name to s_next
-	mov	byte ptr [di], 0	; end of string marker
-	inc	di			; value for the next s_next
+	; set di to the address of the destination
+	; di := offset buffer + buffer_length
+	mov	di, offset read_filenames@buffer
 
-	mov	ax, s_next
-	mov	si, a_len
-	shl	si, 1
-	mov	a[si], ax		; a[a_len] := s_next
-	inc	a_len
+	; length := filename_convert(&fcb, &array[array_length])
+	call	filename_convert	; copy filename to s_next
+	mov	read_filenames@string_length, ax
 
+	; array[array_length] := offset buffer + buffer_length
+	mov	ax, offset read_filenames@buffer
+	add	ax, read_filenames@buffer_length
+	mov	bx, read_filenames@array_length
+	shl	bx, 1
+	add	bx, read_filenames@array_offset
+	mov	[bx], ax
+
+	; array_length := array_length + 1
+	add	read_filenames@array_length, 2
+
+	; buffer_length := buffer_length + length + 1
+	inc	read_filenames@buffer_length
+
+	; test if enough space in the array
+	cmp	read_filenames@array_length, array_maxlen
+	jnb	read_filenames@end
+
+	; get the next file name
 	mov	cl, f_snext
 	mov	dx, offset fcb
-	call	ccpm			; call f_snext
+	call	ccpm
 
+	; if no file, then exit loop
 	cmp	al, 0ffh
-	je	rd_fn_end
-	mov	ax, a_len
-	cmp	ax, a_max
-	jb	rd_fn_cont		; if not at end, continue
+	je	read_filenames@end
 
-rd_fn_end:
+	; otherwise, continue loop
+	jmp	read_filenames@loop
 
+read_filenames@end:
+	mov	ax, read_filenames@array_len
+	ret
 
 exit:
 	; exit
@@ -106,7 +265,7 @@ exit:
 ; return di - bx
 ;
 filename_convert:
-	; copy the file name
+	; copy the filename
 	cld
 	mov	cx, 8
 	mov	bx, di		; save destination address
@@ -148,29 +307,13 @@ filename_convert@end:
 	ret
 
 
+;;; External Imports ;;;
+
 include bdos.def
 include console.lib
 include strings.lib
 include system.lib
 
-
-	dseg
-	org	5ch
-
-fcb	rb	36		; the fcb for f_sfirst and f_snext
-
-
-	org	80h
-
-dma_buf	rb	80h		; dma buffer to read file names from
-
-
-	org 100h
-
-a	rw	a_max		; the array of pointers to strings
-a_len	dw	0		; the current length of a in words
-s	rb	a_max * fn_sz	; the array of null-terminated strings
-s_next	rw	offset s	; offset for the next string in s
 
 end
 
