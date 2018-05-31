@@ -3,7 +3,7 @@
 
 ;;====
 ;;
-;; Function: strings@to_number
+;; Function: str@tonum
 ;;
 ;;     Reads a decimal ascii number from [si] and puts into ax
 ;;
@@ -34,22 +34,21 @@
 ;	    ax := ax * 10 + (dx - '0')
 ;
 
-strings@to_number:
+str@tonum:
 	mov	ax, 0
-	mov	dh, 0				; upper byte of dx
-	mov	cx, 10				; constant 10
+	mov	dh, 0			; upper byte of dx
+	mov	cx, 10			; constant 10
 
-strings@to_number@loop:
+str@tonum@lp:
 	mov	dl, [si]
 	cmp	dl, '0'
-	jb	strings@to_number@end		; exit loop if below '0'
+	jb	str@tonum@e		; exit loop if below '0'
 	cmp	dl, '9'
-	jg	strings@to_number@end		; exit loop if above '9'
-	mul	cx				; ax := ax * (cx = 10)
+	jg	str@tonum@e		; exit loop if above '9'
+	mul	cx			; ax := ax * (cx = 10)
 	sub	dl, '0'
-	add	ax, dx				; ax := ax + (dx - '0')
+	add	ax, dx			; ax := ax + (dx - '0')
 	inc	si
-	jmp	strings@to_number@loop
-strings@to_number@end:
+	jmp	str@tonum@lp
+str@tonum@e:
 	ret
-

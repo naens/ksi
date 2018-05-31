@@ -86,8 +86,8 @@ whprte:
 	int ccpmint
 
 include bdos.def
-include console.lib
-include strings.lib
+include cons.lib
+include str.lib
 
 dseg
 org 80h

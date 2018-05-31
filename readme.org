@@ -2,14 +2,14 @@ Constants:
  * bdos.def: bdos constants
 
 Libraries
- * console.lib: subroutines for console
- * strings.lib: subroutines for strings.
+ * cons.lib: subroutines for console
+ * str.lib: subroutines for strings.
 
 Programs:
  * hello
  * dump: prints files in hexadecimal
- * decnum: prints a number passed as argument
- * numsort: sorts numbers passed on command line
- * dirlist: lists directory files with size ordered alphabetically
+ * dnum: prints a number passed as argument
+ * nsort: sorts numbers passed on command line
+ * dlist: lists directory files with size ordered alphabetically
 
 Documentation: [[https://naens.github.io/ksi/][https://naens.github.io/ksi/]]

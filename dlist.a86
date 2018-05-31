@@ -37,10 +37,7 @@ filename_size	equ	11
 ;     if no arguments, match any file
 ;     copy filenames to array in /name-dot-extension/ format.
 ;     sort filenames in the array alphabetically
-;     for each filename in the array:
-;         display filename
-;         display size
-;         do crlf
+;     display filenames and sizes
 ;
 
 	dseg
@@ -51,14 +48,13 @@ fcb	rb	36		; the fcb for f_sfirst and f_snext
 dma_buf	rb	80h		; dma buffer to read filenames from
 
 	org 100h
-a	rw	a_max		; the array of pointers to strings
-a_len	dw	0		; the current length of a in words
-s	rb	a_max * fn_sz	; the array of null-terminated strings
-s_next	rw	offset s	; offset for the next string in s
+
+	cseg
+	; TODO: main function
 
 ;;====
 ;;
-;; Function: read_filenames
+;; Function: rdfn
 ;;
 ;;     Reads the file names using *f_sfirst* and *f_snext* system calls
 ;;     copies them into the array.  The filenames are null-terminated
@@ -84,18 +80,18 @@ s_next	rw	offset s	; offset for the next string in s
 ;
 ; Private Variables:
 ;
-;     array_offset - address of the array
-;     buffer - array of bytes, used for containing filenames.
+;     aa - address of the array
+;     buf - string buffer, used for containing filenames.
 ;              Its size is 12 times maximum amount of file names.
-;     buffer_length - current length of the buffer
-;     array_length - current length of the array
-;     string_length - length of the current string
+;     buflen - current length of the buffer
+;     alen - current length of the array
+;     slen - length of the current string
 ;
 ; Pseudocode:
 ;
 ;     // initialize
-;     array_length := 0
-;     buffer_length := 0
+;     alen := 0
+;     buflen := 0
 ;
 ;     // get the first filename
 ;     call f_sfirst
@@ -106,17 +102,17 @@ s_next	rw	offset s	; offset for the next string in s
 ;     loop:
 ;
 ;         // copy filename to array
-;         length := filename_convert(&fcb, &array[array_length])
+;         length := fn_conv(&fcb, &array[alen])
 ;
 ;         // update array and array length variables
-;         array[array_length] := offset buffer + buffer_length
-;         array_length := array_length + 1
+;         array[alen] := offset buf + buflen
+;         alen := alen + 1
 ;
 ;         // update buffer length
-;         buffer_length := buffer_length + length + 1
+;         buflen := buflen + length + 1
 ;
 ;         // test if enough space in the array
-;         if array_length = array_maxlen, then
+;         if alen = array_maxlen, then
 ;             return array_maxlen
 ;
 ;         // get the next file name
@@ -127,20 +123,20 @@ s_next	rw	offset s	; offset for the next string in s
 ;         // continue
 ;         continue loop
 ;
-;     return array_length
+;     return alen
 ;
 	dseg $
-read_filenames@array_offset	rw	1
-read_filenames@array_length	rw	1
-read_filenames@buffer		db    array_maxlen * (filename_size + 1)
-read_filenames@buffer_length	rw	1
-read_filenames@string_length	rw	1
+rdfn@aa		rw	1
+rdfn@alen	rw	1
+rdfn@buf	db    array_maxlen * (filename_size + 1)
+rdfn@buflen	rw	1
+rdfn@slen	rw	1
 
 	cseg $
 	; initialize
-	mov	read_filenames@array_offset, ax
-	mov	read_filenames@array_length, 0
-	mov	read_filenames@buffer_length, 0
+	mov	rdfn@aa, ax
+	mov	rdfn@alen, 0
+	mov	rdfn@buflen, 0
 
 	; get the first filename
 	mov	cl, f_sfirst
@@ -149,10 +145,10 @@ read_filenames@string_length	rw	1
 
 	; if no file, return 0
 	cmp	al, 0ffh
-	je	read_filenames@end
+	je	rdfn@end
 
 	; get the rest of the filenames
-read_filenames@loop:
+rdfn@loop:
 
 	; set si to the address of the filename
 	; si := offset dma_buf + al * 32 + 1
@@ -163,30 +159,30 @@ read_filenames@loop:
 	inc	si
 
 	; set di to the address of the destination
-	; di := offset buffer + buffer_length
-	mov	di, offset read_filenames@buffer
+	; di := offset buf + buflen
+	mov	di, offset rdfn@buf
 
-	; length := filename_convert(&fcb, &array[array_length])
-	call	filename_convert	; copy filename to s_next
-	mov	read_filenames@string_length, ax
+	; length := fn_conv(&fcb, &array[alen])
+	call	fn_conv	; copy filename to s_next
+	mov	rdfn@slen, ax
 
-	; array[array_length] := offset buffer + buffer_length
-	mov	ax, offset read_filenames@buffer
-	add	ax, read_filenames@buffer_length
-	mov	bx, read_filenames@array_length
+	; array[alen] := offset buf + buflen
+	mov	ax, offset rdfn@buf
+	add	ax, rdfn@buflen
+	mov	bx, rdfn@alen
 	shl	bx, 1
-	add	bx, read_filenames@array_offset
+	add	bx, rdfn@aa
 	mov	[bx], ax
 
-	; array_length := array_length + 1
-	add	read_filenames@array_length, 2
+	; alen := alen + 1
+	add	rdfn@alen, 2
 
-	; buffer_length := buffer_length + length + 1
-	inc	read_filenames@buffer_length
+	; buflen := buflen + length + 1
+	inc	rdfn@buflen
 
 	; test if enough space in the array
-	cmp	read_filenames@array_length, array_maxlen
-	jnb	read_filenames@end
+	cmp	rdfn@alen, array_maxlen
+	jnb	rdfn@end
 
 	; get the next file name
 	mov	cl, f_snext
@@ -195,13 +191,13 @@ read_filenames@loop:
 
 	; if no file, then exit loop
 	cmp	al, 0ffh
-	je	read_filenames@end
+	je	rdfn@end
 
 	; otherwise, continue loop
-	jmp	read_filenames@loop
+	jmp	rdfn@loop
 
-read_filenames@end:
-	mov	ax, read_filenames@array_len
+rdfn@end:
+	mov	ax, rdfn@array_len
 	ret
 
 exit:
@@ -211,7 +207,7 @@ exit:
 
 ;;====
 ;;
-;; Function: filename_convert
+;; Function: fnconv
 ;;
 ;;     Converts 11-character filenames to <name><'.'><ext>.
 ;;     The result is null-terminated.  The length of the
@@ -264,40 +260,42 @@ exit:
 ; [di] = 0		// @end
 ; return di - bx
 ;
-filename_convert:
+fnconv:
 	; copy the filename
 	cld
 	mov	cx, 8
 	mov	bx, di		; save destination address
 
-filename_convert@name:
+	; name loop
+fnconv@nl:
 	movsb
 	dec	cx
-	jz	filename_convert@test_extension
+	jz	fnconv@test
 	cmp	byte ptr [si], ' '
-	jne	filename_convert@name
+	jne	fnconv@nl
 
 	; adjust si to point to the extension
 	add	si, cx
 
 	; test whether there is an extension
-filename_convert@test_extension:
+fnconv@test:
 	cmp	byte ptr [si], ' '
-	je	filename_convert@end
+	je	fnconv@end
 
 	; copy the extension
 	mov	byte ptr [di], '.'
 	inc	di
 	mov	cx, 3
 
-filename_convert@extension:
+	; extension loop
+fnconv@el:
 	movsb
 	dec	cx
-	jz	filename_convert@end
+	jz	fnconv@e
 	cmp	byte ptr [si], ' '
-	jne	filename_convert@extension
+	jne	fnconv@el
 
-filename_convert@end:
+fnconv@e:
 	; put null byte
 	mov	[di], 0
 
@@ -310,9 +308,9 @@ filename_convert@end:
 ;;; External Imports ;;;
 
 include bdos.def
-include console.lib
-include strings.lib
-include system.lib
+include cons.lib
+include str.lib
+include sys.lib
 
 
 end
