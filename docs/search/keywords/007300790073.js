@@ -1,1 +1,1 @@
-NDSearch.OnPrefixDataLoaded("sys",["Library"],[["System",,[[,,,,0,"File:system.lib:System"]]]]);
+NDSearch.OnPrefixDataLoaded("sys",["Library"],[["System",,[[,,,,0,"File:sys.lib:System"]]]]);

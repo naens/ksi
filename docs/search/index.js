@@ -1,1 +1,1 @@
-NDSearch.OnPrefixIndexLoaded(["ccp","dir","fil","mai","rea","str","sys"]);
+NDSearch.OnPrefixIndexLoaded(["ccp","dir","fnc","mai","rdf","str","sys"]);

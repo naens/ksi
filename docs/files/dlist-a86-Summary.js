@@ -1,0 +1,1 @@
+NDFramePage.OnPageTitleLoaded("File:dlist.a86","dlist.a86");NDSummary.OnSummaryLoaded("File:dlist.a86",[["Assembly","Assembly"]],[["Files","File"],["Functions","Function"],["Groups","Group"]],[[9,0,0,"DirList","DirList"],[10,0,2,"Functions","Functions"],[11,0,1,"main","main"],[12,0,1,"rdfn","rdfn"],[13,0,1,"fnconv","fnconv"]]);

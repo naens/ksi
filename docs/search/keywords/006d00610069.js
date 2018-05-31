@@ -1,1 +1,1 @@
-NDSearch.OnPrefixDataLoaded("mai",["Function"],[["main",,[[,,,,0,"File:dirlist.a86:main"]]]]);
+NDSearch.OnPrefixDataLoaded("mai",["Function"],[["main",,[[,,,,0,"File:dlist.a86:main"]]]]);

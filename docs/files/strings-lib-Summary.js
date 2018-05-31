@@ -1,1 +1,0 @@
-NDFramePage.OnPageTitleLoaded("File:strings.lib","strings.lib");NDSummary.OnSummaryLoaded("File:strings.lib",[["Assembly","Assembly"]],[["Functions","Function"],["Groups","Group"],["Libraries","Library"]],[[1,0,1,"Libraries","Libraries"],[2,0,2,"Strings","Strings"],[3,0,1,"Functions","Functions"],[4,0,0,"strings@to_number","strings@to_number"]]);
