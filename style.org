@@ -1,82 +1,107 @@
 #+TITLE: Assembly Language Style
 
 * Directory Organization
-The directory can contain multiple programs and libraries.  Programs are
-code files meant to be translated in an executable.  They can use libraries
-by using ~include~ or by linking.  Libraries do not reference other
-libraries and do not include files.  If a library needs functions or
-constants from another file, the library should be included after that file,
-or, in case of linking, the included functions must be marked as external.
+** Files
+The directory contains three kinds of source files:
+ * ~def~ files, containing constants
+ * ~lib~ files, containing libraries
+ * ~a86~ files, containing programs
 
-** Types of files:
- * ~def~: equates
- * ~lib~: libraries, functions used by programs
- * ~a86~: programs
+Programs can use functions defined in libraries.  Library objects
+are assembled using RASM-86 and linked with LINK-86.
 
-** Referencing library functions
-There are two ways:
- * using ~include~
- * using ~public~ and ~extern~ with a linker
+** Names
+The name of a library file is ~<library-name>.<lib>~, where
+~<library-name>~ is a string of approx. 4 characters.
 
-Libraries that use ~include~ can be transformed into libraries that use
-a linker by specifying public functions, but the for the opposite to work,
-it's possible that identifier and label names have to be changed.
+The program names are longer, approx. 6 characters.
 
 * File Organization
-Every file contains a comment that describes it.
+** Comments
+All files should have a comment header, explaining the purpose of the
+file.  Comments also appear before each public function, describing
+its interface and register use.  Comments before private functions can
+be shorter.
 
-All equates should be at the top of the file.  All includes should be at the
-end of the file.
+** Organization
+At the top of the file are the equates, followed by external
+declarations.  Then follow the functions.
 
-** Libraries
-Libraries are made of standalone public functions related by their
-functionality.  They can use common private functions, but they shouldn't
-use common modifiable data.  Functions should not use data that is read
-after the call.  It can be kept, but not used.
+The function organization is as follows:
+ * comment
+ * dseg, containing local variables
+ * cseg, containing the code of the function
 
-** Programs
-Programs are made of an anonymous ~main~ function and helper functions.  The
-main function is the first, other functions follow.
+The equates and the external declarations used by the function should
+be at the beginning of the file.
 
-* Function Organization
-The organization of the functions is:
- * comment that describes the function
- * data segment variables
- * code segment
+** Function Comment
+Public functions use a public Natural Docs comment containing the
+following items:
+ * The description of the function
+ * Input parameters
+ * Returned value(s)
+ * Side effects
+ * Modified registers.
 
-* Names
-** Libraries
-*** Public Names
-The library names should be around 4 characters.  The library functions
-names are prefixed by the library name and a ~@~.  Function names should
-also be short, but can be somewhat longer, around 8 characters.
+All function can also have a private comment explaining the algorithm
+and how it works in detail.  The pseudocode should normally be
+included.
 
-*** Private Names
-In included libraries label and variable names are visible from outside the
-library, so they should be short and prefixed by the function name and a
-~@~.  For example if a library ~cons~, the function is ~cons@print_hex~, the
-labels can be ~cons@print_hex@l1~, ~cons@print_hex@e~.  Helper functions
-have a suffix, for example ~cons@print_hex_hlp~
+Everything that may be important for the user of the function (such as
+risks and unexpected behaviour) should be in the public comment.
 
-In libraries that use the linker instead of ~include~, the identifier names
-do not have to be prefixed with the name of the library.
+Public comments are preceded by ~;;~ and private comments are preceded
+by ~;~.  These ~;~ and ~;;~ characters are the first on the string.
 
-For programs, the rules are like for linked libraries.  The main function
-can declare names without any prefix.
+** Comments inside functions
+There are two kinds of comments inside functions:
+ * ~;~ comments preceded by a ~TAB~ character explaining the following
+   line(s)
+ * ~;~ comments after assembly statement, preceded by one or several
+   ~TAB~'s.  These are short comments that explain a more precise
+   choice in the implementation.
 
-* Comments
-The comments at the start of the files and before functions should explain
-the abbreviations.
+* Identifier Names
 
-The comment at the start of a library describe the purpose of the library
-and list all the public functions with a short description.
+** Public library function:
+#+BEGIN_SRC
+<library-name>_<function-name>
+#+END_SRC
 
-The comment before each function should describe what the function does, the
-way parameter are passed and returned, and the registers used.  A pseudocode
-version of the function, as well as the description of local variables and
-the use of registers, can also follow.
+** Private function:
+#+BEGIN_SRC
+<function-name>
+#+END_SRC
 
-Comments inside the code should explain the main parts of the function. 
-They should be before the code, with one tab indentation.
+** Private global ("static") variables:
+#+BEGIN_SRC
+<variable-name>
+#+END_SRC
 
-Comments after a line of code can explain a difficult part of the code.
+** Local variables:
+#+BEGIN_SRC
+<short-function-name>_<variable-name>
+#+END_SRC
+
+** Local labels:
+#+BEGIN_SRC
+<short-function-name>_<label-name>
+#+END_SRC
+
+** Main function labels:
+#+BEGIN_SRC
+<label-name>
+#+END_SRC
+
+** Explanation
+ * ~<library-name>~: the name of the library, approx. 4 characters
+ * ~<function-name>~: the name of the function, approx. 6 characters
+ * ~<variable-name>~: the name of the variable, approx. 4 characters
+ * ~<short-function-name>~: the shortened name of the function,
+   approx. 3 characters, used for private labels and variables.
+   Should be unique in the file.  For example, the /convert file name/,
+   ~convfn~ function becomes ~cfn~.
+ * ~<label-name>~: the name of the label, approx. 3 characters.
+   Functions should not be very long, so the scope of such labels
+   should be as local as possible.
