@@ -1,25 +1,27 @@
-ccpmint equ 224
-p_termcpm equ 0
-c_writestr equ 9
-
-cseg
+;; Program: hello
+;;
+;;     Prints the 'Hello, world!' message.
+;;
+	cseg
 
 start:
-	mov cl, c_writestr
-	mov dx, offset Message
-	call ccpm
+	mov	ax, offset msg
+	call	cons_prstr
 
-	mov cl, p_termcpm
-	mov dx, 0
-	call ccpm
+	mov	cl, p_termcpm
+	mov	dx, 0
+	call	ccpm
 
 ccpm:
-	int ccpmint
+	int	ccpmint
 	ret
 
-dseg
-org 100h
+include bdos.def
 
-Message db 'Hello, world!$'
+	dseg
+	org	100h
 
-end
+msg	db	'Hello, world!', 0
+
+	end
+
