@@ -1,5 +1,60 @@
-; Console Input/Output library
-; needs bdos.def
+;; Library: CONS
+;;
+;;     Console Input/Output library
+;;
+;; Dependencies:
+;;
+;;     bdos.def
+;;
+
+;;====
+;;
+;; Function: cons_prstr
+;;
+;;     Prints a null-terminated 7-bit ASCII string on the console.
+;;     Does not check if the characters ar in printable range.
+;;     Does not modify the string.
+;;
+;; Parameters:
+;;
+;;      ax - address of the first byte of the string to print
+;;
+;; Returns:
+;;
+;;    nothing
+;;
+;; Modified Registers:
+;;
+;;     bx, cx, dx, si
+;;
+;;====
+;
+; Register Usage:
+;
+;     cl - number of system call
+;     dl - system call parameter
+;     si - current address in the string
+;
+; Pseudocode:
+;
+;     si := address ot the string
+;     while [si] <> 0 do:
+;         call c_write([si])
+;         inc si
+;
+cons_prstr:
+	mov	si, ax
+prstr_lp:
+	mov	dl, [si]
+	cmp	dl, 0
+	je	prstr_end
+	mov	cl, c_write
+	int	ccpmint
+	inc	si
+	jmp	prstr_lp
+prstr_end:
+	ret
+	
 
 cons_print_word:
 	; prints word in ax in hexadecimal
