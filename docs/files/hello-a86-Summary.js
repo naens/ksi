@@ -1,0 +1,1 @@
+NDFramePage.OnPageTitleLoaded("File:hello.a86","hello.a86");NDSummary.OnSummaryLoaded("File:hello.a86",[["Assembly","Assembly"]],[["Files","File"]],[[17,0,0,"hello","hello"]]);

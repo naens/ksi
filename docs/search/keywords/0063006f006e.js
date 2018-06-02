@@ -1,0 +1,1 @@
+NDSearch.OnPrefixDataLoaded("con",["Library","Function"],[["CONS",,[[,,,,0,"File:cons.lib:CONS"]]],["cons_prstr",,[[,,,,1,"File:cons.lib:cons_prstr"]]]]);
