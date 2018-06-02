@@ -4,15 +4,14 @@
 ** Files
 The directory contains three kinds of source files:
  * ~def~ files, containing constants
- * ~lib~ files, containing libraries
- * ~a86~ files, containing programs
+ * ~a86~ modules and programs
 
-Programs can use functions defined in libraries.  Library objects
+Programs can use functions defined in libraries.  Module objects
 are assembled using RASM-86 and linked with LINK-86.
 
 ** Names
-The name of a library file is ~<library-name>.<lib>~, where
-~<library-name>~ is a string of approx. 4 characters.
+The name of a module file is ~<module-name>.a86~, where ~<module-name>~ is
+a string of approx. 4 characters.
 
 The program names are longer, approx. 6 characters.
 
@@ -64,9 +63,9 @@ There are two kinds of comments inside functions:
 
 * Identifier Names
 
-** Public library function:
+** Public module function:
 #+BEGIN_SRC
-<library-name>_<function-name>
+<module-name>_<function-name>
 #+END_SRC
 
 ** Private function:
@@ -95,7 +94,7 @@ There are two kinds of comments inside functions:
 #+END_SRC
 
 ** Explanation
- * ~<library-name>~: the name of the library, approx. 4 characters
+ * ~<module-name>~: the name of the module, approx. 4 characters
  * ~<function-name>~: the name of the function, approx. 6 characters
  * ~<variable-name>~: the name of the variable, approx. 4 characters
  * ~<short-function-name>~: the shortened name of the function,

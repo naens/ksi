@@ -1,9 +1,9 @@
 Constants:
  * bdos.def: bdos constants
 
-Libraries
- * cons.lib: subroutines for console
- * str.lib: subroutines for strings.
+Modules
+ * cons: subroutines for console
+ * str: subroutines for strings.
 
 Programs:
  * hello

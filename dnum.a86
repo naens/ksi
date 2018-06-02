@@ -34,8 +34,8 @@ prog03_end:
 	int ccpmint
 
 include bdos.def
-include cons.lib
-include str.lib
+include cons.a86
+include str.a86
 
 dseg
 org 100h

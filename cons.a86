@@ -1,6 +1,6 @@
-;; Library: CONS
+;; Module: CONS
 ;;
-;;     Console Input/Output library
+;;     Console Input and Output
 ;;
 ;; Dependencies:
 ;;

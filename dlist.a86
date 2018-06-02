@@ -1,4 +1,4 @@
-;; Program: DirList
+;; Program: dlist
 ;; Lists files of directory with sizes
 
 array_maxlen	equ	100h
@@ -308,9 +308,9 @@ fnconv@e:
 ;;; External Imports ;;;
 
 include bdos.def
-include cons.lib
-include str.lib
-include sys.lib
+include cons.a86
+include str.a86
+include sys.a86
 
 
 end

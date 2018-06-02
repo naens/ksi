@@ -1,5 +1,5 @@
-; Library: System
-; Library containing functions to interact with the system
+; Module: System
+; Contains functions to interact with the system
 
 ;====
 ;
