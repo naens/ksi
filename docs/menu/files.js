@@ -1,1 +1,1 @@
-NDMenu.OnSectionLoaded("files.js",[[1,"cons.lib"],[1,"dlist.a86"],[1,"hello.a86"],[1,"str.lib"],[1,"sys.lib"]]);
+NDMenu.OnSectionLoaded("files.js",[[1,"cons.a86"],[1,"dlist.a86"],[1,"hello.a86"],[1,"str.a86"],[1,"sys.a86"]]);

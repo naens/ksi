@@ -1,0 +1,1 @@
+NDSummary.OnToolTipsLoaded("File:sys.a86",{2:"<div class=\"NDToolTip TModule LAssembly\"><div class=\"TTSummary\">Contains functions to interact with the system</div></div>",4:"<div class=\"NDToolTip TFunction LAssembly\"><div class=\"TTSummary\">Calls the Operating System</div></div>"});

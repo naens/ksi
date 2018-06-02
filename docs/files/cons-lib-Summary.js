@@ -1,1 +1,0 @@
-NDFramePage.OnPageTitleLoaded("File:cons.lib","cons.lib");NDSummary.OnSummaryLoaded("File:cons.lib",[["Assembly","Assembly"]],[["Functions","Function"],["Groups","Group"],["Libraries","Library"]],[[14,0,1,"Libraries","Libraries"],[15,0,2,"CONS","CONS"],[16,0,1,"Functions","Functions"],[18,0,0,"cons_prstr","cons_prstr"]]);

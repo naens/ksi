@@ -1,1 +1,0 @@
-NDSummary.OnToolTipsLoaded("File:str.lib",{6:"<div class=\"NDToolTip TLibrary LAssembly\"><div class=\"TTSummary\">String conversions and functions</div></div>",8:"<div class=\"NDToolTip TFunction LAssembly\"><div class=\"TTSummary\">Reads a decimal ascii number from [si] and puts into ax</div></div>"});

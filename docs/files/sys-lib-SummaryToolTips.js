@@ -1,1 +1,0 @@
-NDSummary.OnToolTipsLoaded("File:sys.lib",{2:"<div class=\"NDToolTip TLibrary LAssembly\"><div class=\"TTSummary\">Library containing functions to interact with the system</div></div>",4:"<div class=\"NDToolTip TFunction LAssembly\"><div class=\"TTSummary\">Calls the Operating System</div></div>"});

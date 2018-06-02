@@ -21,14 +21,14 @@
 # Comment Types
 # ------------------------------------------------------------------------
 
-Comment Type: Library
+Comment Type: Module
 
-   Plural Display Name: Libraries
+   Plural Display Name: Modules
 
    Scope: Always Global
 
    Keywords:
-      library, libraries
+      module, modules
 
 
 # Each Natural Docs comment has a corresponding type which determine its
