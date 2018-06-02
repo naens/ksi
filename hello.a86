@@ -2,6 +2,9 @@
 ;;
 ;;     Prints the 'Hello, world!' message.
 ;;
+
+extrn	cons_prstr:near
+
 	cseg
 
 start:
@@ -19,7 +22,6 @@ ccpm:
 include bdos.def
 
 	dseg
-	org	100h
 
 msg	db	'Hello, world!', 0
 
