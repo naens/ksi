@@ -1,1 +1,1 @@
-NDSearch.OnPrefixDataLoaded("str",["Function","Module"],[["str@tonum",,[[,,,,0,"File:str.a86:str@tonum"]]],["Strings",,[[,,,,1,"File:str.a86:Strings"]]]]);
+NDSearch.OnPrefixDataLoaded("str",["Function","Module"],[["str_tonum",,[[,,,,0,"File:str.a86:str_tonum"]]],["Strings",,[[,,,,1,"File:str.a86:Strings"]]]]);

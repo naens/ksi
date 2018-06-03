@@ -1,1 +1,1 @@
-NDSearch.OnPrefixDataLoaded("con",["Module","Function"],[["CONS",,[[,,,,0,"File:cons.a86:CONS"]]],["cons_prstr",,[[,,,,1,"File:cons.a86:cons_prstr"]]]]);
+NDSearch.OnPrefixDataLoaded("con",["Module","Function"],[["CONS",,[[,,,,0,"File:cons.a86:CONS"]]],["cons_prnum",,[[,,,,1,"File:cons.a86:cons_prnum"]]],["cons_prstr",,[[,,,,1,"File:cons.a86:cons_prstr"]]]]);
