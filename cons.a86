@@ -63,7 +63,9 @@ prs_e:
 	ret
 
 
-cons_print_word:
+;; Function: cons_prnum
+;; TODO
+cons_prnum:
 	; prints word in ax in hexadecimal
 	push ax
 	mov al, ah

@@ -3,7 +3,7 @@
 
 ;;====
 ;;
-;; Function: str@tonum
+;; Function: str_tonum
 ;;
 ;;     Reads a decimal ascii number from [si] and puts into ax
 ;;
@@ -17,38 +17,39 @@
 ;;
 ;; Modified Registers:
 ;;
-;;     si, cx, dx
+;;     si, cx, bx
 ;;
 ;;====
 ;
 ; Register Usage:
 ;
 ;     si - decimal ascii representation of the number
-;     dx - current byte
+;     bx - current byte
 ;     cx - constant 10, used for multiplication
 ;     ax - accumulator and return value
 ;
 ; Pseudocode:
 ;	ax := 0
-;	while (dx := [si]) in '0'..'9' do:
+;	while (bx := [si]) in '0'..'9' do:
 ;	    ax := ax * 10 + (dx - '0')
 ;
 
-str@tonum:
+str_tonum:
 	mov	ax, 0
-	mov	dh, 0			; upper byte of dx
+	mov	bx, 0
 	mov	cx, 10			; constant 10
 
-str@tonum@lp:
-	mov	dl, [si]
-	cmp	dl, '0'
-	jb	str@tonum@e		; exit loop if below '0'
-	cmp	dl, '9'
-	jg	str@tonum@e		; exit loop if above '9'
+tn_lp:
+	mov	bl, [si]
+	cmp	bl, '0'
+	jb	tn_e			; exit loop if below '0'
+	cmp	bl, '9'
+	jg	tn_e			; exit loop if above '9'
 	mul	cx			; ax := ax * (cx = 10)
-	sub	dl, '0'
-	add	ax, dx			; ax := ax + (dx - '0')
+	sub	bl, '0'
+	add	ax, bx			; ax := ax + (bx - '0')
 	inc	si
-	jmp	str@tonum@lp
-str@tonum@e:
+	jmp	tn_lp
+tn@e:
 	ret
+
