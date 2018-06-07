@@ -3,8 +3,6 @@
 ;;     Prints the 'Hello, world!' message.
 ;;
 
-	uppercase
-
 extern	cons_prstr
 
 	segment code

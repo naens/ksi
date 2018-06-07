@@ -1,3 +1,4 @@
+	uppercase
 c_read		equ 	1
 c_write		equ	2
 c_writestr	equ	9
