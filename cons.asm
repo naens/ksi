@@ -45,10 +45,10 @@ global	cons_prstr
 ;         call c_write([pchr])
 ;         inc pch
 ;
-	section	.bss
+	SEGMENT    DATA
 prs_pchr	resw	1
 
-	section	.text
+	SEGMENT    CODE
 cons_prstr:
 	mov	[prs_pchr], ax
 .lp:

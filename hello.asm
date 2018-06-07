@@ -5,7 +5,7 @@
 
 extern	cons_prstr
 
-	section	.text
+	SEGMENT CODE
 
 start:
 	mov	ax, msg
@@ -21,6 +21,6 @@ ccpm:
 
 %include "bdos.def"
 
-	section	.data
+	SEGMENT DATA
 
 msg	db	'Hello, world!', 0
