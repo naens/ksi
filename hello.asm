@@ -3,9 +3,11 @@
 ;;     Prints the 'Hello, world!' message.
 ;;
 
+	uppercase
+
 extern	cons_prstr
 
-	SEGMENT CODE
+	segment code
 
 start:
 	mov	ax, msg
@@ -21,6 +23,6 @@ ccpm:
 
 %include "bdos.def"
 
-	SEGMENT DATA
+	segment	data
 
 msg	db	'Hello, world!', 0

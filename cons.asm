@@ -7,6 +7,8 @@
 ;;     bdos.def
 ;;
 
+	uppercase
+
 %include "bdos.def"
 
 global	cons_prstr
@@ -45,10 +47,10 @@ global	cons_prstr
 ;         call c_write([pchr])
 ;         inc pch
 ;
-	SEGMENT    DATA
+	segment    data
 prs_pchr	resw	1
 
-	SEGMENT    CODE
+	segment    code
 cons_prstr:
 	mov	[prs_pchr], ax
 .lp:
