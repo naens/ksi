@@ -3,12 +3,12 @@
 ;;     Prints the 'Hello, world!' message.
 ;;
 
-extrn	cons_prstr:near
+extern	cons_prstr
 
-	cseg
+	section	.text
 
 start:
-	mov	ax, offset msg
+	mov	ax, msg
 	call	cons_prstr
 
 	mov	cl, p_termcpm
@@ -19,11 +19,8 @@ ccpm:
 	int	ccpmint
 	ret
 
-include bdos.def
+%include "bdos.def"
 
-	dseg
+	section	.data
 
 msg	db	'Hello, world!', 0
-
-	end
-
