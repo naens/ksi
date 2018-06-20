@@ -1,4 +1,5 @@
 #+TITLE: Assembly Language Style
+#+OPTIONS: toc:nil, author:nil
 
 * Directory Organization
 ** Files
@@ -104,3 +105,22 @@ There are two kinds of comments inside functions:
  * ~<label-name>~: the name of the label, approx. 3 characters.
    Functions should not be very long, so the scope of such labels
    should be as local as possible.
+* Calling Convention
+** Calling
+ * Parameters are passed through registers: *ax*, *dx*, *bx*, *cx*.
+ * Other parameters are pushed to stack if needed in LTR order
+ * Returned values are returned in *ax* and *dx*.
+   If one of the returned values is a pointer, it is returned in *bx*.
+
+| Parameter Regs | Stack Params |
+|----------------+--------------|
+| ax, dx, bx, cx | LTR          |
+
+** Function
+ * *ax*, *bx*, *cx* and dx don't have to be restored.
+ * *si*, *di*, *bp* and *sp* have to be restored (the stack should be in the
+   same state as before the call).
+
+| Scratch Regs   | Preserved Registers | Ret Val | Ret Addr |
+|----------------+---------------------+---------+----------|
+| ax, bx, cx, dx | si, di, bp, sp      | ax, dx  | bx       |
