@@ -2,7 +2,6 @@
 ;;
 ;;     Prints the 'Hello, world!' message.
 ;;
-
 extern	cons_prstr
 
 	segment code

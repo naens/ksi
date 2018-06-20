@@ -6,7 +6,6 @@
 ;;
 ;;     bdos.def
 ;;
-
 %include "bdos.def"
 
 global	cons_prstr
