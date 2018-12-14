@@ -1,0 +1,37 @@
+conout		equ	02h
+dosexit		equ	4ch
+dos		equ	21h
+
+dgroup	group	data, stack
+cgroup	group	code
+
+stack	sseg	word
+		rw	1024
+stack_base	rw	0
+
+code	cseg
+	public	osprchr, osterm
+	extrn	main:near
+
+org	0h
+	call	main
+
+osterm:
+	mov	ah, dosexit
+	mov	al, 4[bp]
+	int	dos
+	ret	2
+
+osprchr:
+	push	bp
+	mov	bp, sp
+	mov	ah, conout
+	mov	dl, 4[bp]
+	int	dos
+	pop	bp
+	ret	2
+
+data	dseg
+	org	100h
+
+end

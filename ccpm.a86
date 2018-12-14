@@ -1,0 +1,42 @@
+c_write		equ	2
+p_termcpm	equ	0
+ccpmint		equ	224
+
+dgroup	group	data, stack
+cgroup	group	code
+
+stack	sseg	word
+		rw	1024
+stack_base	rw	0
+
+code	cseg
+	public	osprchr, osterm
+	extrn	main:near
+
+org	0h
+	call	main
+
+osterm:
+	mov	cl, p_termcpm
+	mov	dx, 4[bp]
+	call	ccpm
+	ret	2
+
+osprchr:
+	push	bp
+	mov	bp, sp
+	mov	cl, c_write
+	mov	dl, 4[bp]
+	call	ccpm
+	pop	bp
+	ret	2
+
+ccpm:
+	int	ccpmint
+	ret
+
+data	dseg
+	org	100h
+
+end
+

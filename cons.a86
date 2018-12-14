@@ -1,0 +1,35 @@
+;dgroup	group	data
+cgroup	group	code
+
+code	cseg
+	public	prchr, prstr
+	extrn	osprchr:near
+
+prchr:
+	push	bp
+	mov	bp, sp
+	mov	ax, 4[bp]
+	push	ax
+	call	osprchr
+	pop	bp
+	ret	2
+
+prstr:
+	push	bp
+	mov	bp, sp
+	mov	si, 4[bp]
+	mov	ah, 0
+prstr_loop:
+	mov	al, [si]
+	cmp	al, 0
+	je	prstr_end
+	push	ax
+	call	osprchr
+	inc	si
+	jmp	prstr_loop
+prstr_end:
+	pop	bp
+	ret	2
+
+end
+

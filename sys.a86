@@ -1,32 +1,18 @@
-; Module: System
-; Contains functions to interact with the system
+;dgroup	group	data
+cgroup	group	code
 
-;====
-;
-; Function: ccpm
-;
-;     Calls the Operating System
-;
-; Parameters:
-;
-;     cl - System Call Number
-;     dl or dx - Parameter
-;     ds:dx - Address
-;
-; Returns:
-;
-;     al or ax - Return Value
-;     es:ax - Return Address
-;     bx - Same as ax
-;     cx - Error Code
-;
-; Preserved Registers:
-;
-;     - si, di, bp, sp, ss, ds, cs
-;     - es, when not used to hold a return segment value
-;
-;====
+code	cseg
+	public	term
+	extrn	osterm:near
 
-ccpm:
-	int	ccpmint
+term:
+	push	bp
+	mov	bp, sp
+	mov	ax, 4[bp]
+	push	ax
+	call	osterm
+	pop	bp
+	ret	2
 
+end
+
