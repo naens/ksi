@@ -87,11 +87,14 @@ a.menuitem
     font-variant:        normal;
     text-transform:      none;
     font-weight:         normal;
-    padding:             1px 8px 3px 1px;
-    margin-left:         5px; 
-    margin-right:        5px; 
-    margin-top:          5px; 
-    margin-bottom:       5px;
+    padding-top:         3px;
+    padding-right:       8px;
+    padding-bottom:      0px;
+    padding-left:        1px;
+    margin-left:         3px; 
+    margin-right:        3px; 
+    margin-top:          3px; 
+    margin-bottom:       3px;
     border-color:        rgb(159,126,57);
     text-align:          right;
 }

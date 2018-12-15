@@ -1,8 +1,9 @@
-;******h* ksi/ccpm
+;****h* ksi/ccpm
 ;  NAME
 ;    ccpm -- Concurrent CP/M Module
 ;  DESCRIPTION
 ;    Interface for Operating System calls for Concurrent CP/M.
+;    The specification of the functions is in the OS module.
 ;******
 
 c_write		equ	2
@@ -23,32 +24,16 @@ code	cseg
 org	0h
 	call	main
 
-;****f* ccpm/osterm
-;  NAME
-;    osterm -- Terminate the programe with exit code
-;  DESCRIPTION
-;    Terminate the program and return the exit code.
-;  PARAMETERS
-;    code - exit code
-;  RETURN VALUE
-;    Doesn't return anything.
-;******
+
+; terminate the program
 osterm:
 	mov	cl, p_termcpm
 	mov	dx, 4[bp]
 	int	ccpm
 	ret	2
 
-;****f* ccpm/osprchr
-;  NAME
-;    osprchr -- Print one single character on the console
-;  DESCRIPTION
-;    Prints one character on the console.
-;  PARAMETERS
-;    chr - character to print
-;  RETURN VALUE
-;    Doesn't return anything.
-;******
+
+; print a character on the console
 osprchr:
 	push	bp
 	mov	bp, sp

@@ -1,9 +1,11 @@
-;******h* ksi/dos
+;****h* ksi/dos
 ;  NAME
 ;    dos -- PC-DOS Module
 ;  DESCRIPTION
 ;    Interface for Operating System calls for PC-DOS 3.30.
+;    See the OS module for information about functions.
 ;******
+
 conout		equ	02h
 dosexit		equ	4ch
 dos		equ	21h
@@ -22,30 +24,16 @@ code	cseg
 org	0h
 	call	main
 
-;****f* dos/osterm
-;  NAME
-;    osterm -- Terminate the programe with exit code
-;  DESCRIPTION
-;    Terminate the program and return the exit code.
-;  PARAMETERS
-;    code - exit code
-;  RETURN VALUE
-;    Doesn't return anything.
+
+; terminate the program
 osterm:
 	mov	ah, dosexit
 	mov	al, 4[bp]
 	int	dos
 	ret	2
 
-;****f* dos/osprchr
-;  NAME
-;    osprchr -- Print one single character on the console
-;  DESCRIPTION
-;    Prints one character on the console.
-;  PARAMETERS
-;    chr - character to print
-;  RETURN VALUE
-;    Doesn't return anything.
+
+; print a character on the console
 osprchr:
 	push	bp
 	mov	bp, sp
