@@ -1,3 +1,12 @@
+;****h* ksi/sys
+;  NAME
+;    sys -- System module
+;  DESCRIPTION
+;    Module containing system related functions.
+;  USES
+;    Operating system specific module (ccpm.a86, dos.a86)
+;******
+
 ;dgroup	group	data
 cgroup	group	code
 
@@ -5,6 +14,16 @@ code	cseg
 	public	term
 	extrn	osterm:near
 
+;****f* sys/term
+;  NAME
+;    term -- Terminate the program
+;  DESCRIPTION
+;    Terminates the program with exit code.
+;  PARAMETERS
+;    code - exit code to return
+;  RETURN VALUE
+;    Doesn't return anything.
+;******
 term:
 	push	bp
 	mov	bp, sp
@@ -15,4 +34,3 @@ term:
 	ret	2
 
 end
-

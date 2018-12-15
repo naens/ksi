@@ -1,10 +1,29 @@
+;****h* ksi/cons
+;  NAME
+;    cons -- Console Input and Output
+;  DESCRIPTION
+;    Console Input and Output module.
+;  USES
+;    Operating System modules (ccpm.a86, dos.a86).
+;******
 ;dgroup	group	data
+
 cgroup	group	code
 
 code	cseg
 	public	prchr, prstr
 	extrn	osprchr:near
 
+;****f* cons/prchr
+;  NAME
+;    prchr -- print single ASCII character
+;  DESCRIPTION
+;    Prints a single character on the console.
+;  PARAMETERS
+;    chr - character to print
+;  RETURN VALUE
+;    Doesn't return anything.
+;******
 prchr:
 	push	bp
 	mov	bp, sp
@@ -14,6 +33,16 @@ prchr:
 	pop	bp
 	ret	2
 
+;****f* cons/prstr
+;  NAME
+;    prstr -- Prints a null-terminated 7-bit ASCII string.
+;  DESCRIPTION
+;    Prints the string given as parameter on the console.
+;  PARAMETER
+;    pstr - address of the string to print
+;  RETURN VALUE
+;    Doesn't return anything
+;******
 prstr:
 	push	bp
 	mov	bp, sp
@@ -32,4 +61,3 @@ prstr_end:
 	ret	2
 
 end
-
