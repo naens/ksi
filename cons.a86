@@ -38,7 +38,7 @@ prchr:
 ;    prstr -- Prints a null-terminated 7-bit ASCII string.
 ;  DESCRIPTION
 ;    Prints the string given as parameter on the console.
-;  PARAMETER
+;  PARAMETERS
 ;    pstr - address of the string to print
 ;  RETURN VALUE
 ;    Doesn't return anything
