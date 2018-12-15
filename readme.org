@@ -19,4 +19,4 @@ Programs:
  * nsort: sorts numbers passed on command line
  * dlist: lists directory files with size ordered alphabetically
 
-Documentation: [[https://naens.github.io/ksi/][https://naens.github.io/ksi/]]
+Documentation: [[https://naens.github.io/ksi/][https://naens.github.io/ksi]]
