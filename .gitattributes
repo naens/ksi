@@ -1,3 +1,4 @@
 *.a86 linguist-language=Assembly
 docs/* linguist-documentation
+robodoc.css linguist-documentation
 *.a86 eol=crlf
