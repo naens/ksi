@@ -28,11 +28,26 @@
  * $Id: html_generator.c,v 1.94 2008/06/17 11:49:27 gumpu Exp $
  */
 
+@font-face {
+  font-family: quadrat_serial;
+  src: url(quadrat_serial.ttf);
+}
+
+@font-face {
+  font-family: courier_prime;
+  src: url(courier_prime.ttf);
+}
+
+@font-face {
+  font-family: courier_prime_bold;
+  src: url(courier_prime_bold.ttf);
+}
+
 body
 {
     background-color:    rgb(255,255,255);
     color:               rgb(98,84,55);
-    font-family:         Arial, serif;
+    font-family:         courier_prime, serif;
     border-color:        rgb(226,199,143);
 }
 
@@ -85,7 +100,7 @@ p.item_name
 {
     background-color: rgb(98,84,55);
     color:            rgb(230,221,202);
-    font-family:      "Times New Roman", serif;
+    font-family:      quadrat_serial, serif;
     font-style:       normal;
     border-color:     rgb(0,0,0);
 }
@@ -164,11 +179,12 @@ a.indexitem
 h1, h2, h3, h4, h5, h6
 {
     background-color: rgb(221,221,221);
-    font-family:      Arial, serif;
+    font-family:      quadrat_serial, serif;
     font-style:       normal;
     font-variant:     normal;
     text-transform:   none;
     font-weight:      normal;
+    padding-top: 4px;
 }
 
 h1
