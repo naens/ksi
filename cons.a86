@@ -1,63 +1,345 @@
 ;****h* ksi/cons
+;
 ;  NAME
-;    cons -- Console Input and Output
+;    cons - console module
+;
 ;  DESCRIPTION
-;    Console Input and Output module.
-;  USES
-;    Operating System modules (ccpm.a86, dos.a86).
+;    This module contains the input and output functions for the
+;    console.  There are two categories of functions: the output
+;    functions (prchr, prstr, println, fnewline, prxbyte, prxword),
+;    and the input functions (readkey, readln, readx, readd).
+;    These are functions for reading and writing characters, strings
+;    and numbers.
+;
 ;******
-;dgroup	group	data
 
-cgroup	group	code
 
-code	cseg
-	public	prchr, prstr
-	extrn	osprchr:near
+public prchr, prstr, println, newline, prxbyte, prxword, printd
+public readkey, readln, readx, readd
 
-;****f* cons/prchr
+extrn osprchr:near, osrdkey:near, osrdln:near
+
+
+;****f* cons/prchr, prstr, println, newline, prxbyte, prxword, printd
+;
 ;  NAME
-;    prchr -- print single ASCII character
+;    prchr, prstr, println, newline, prhexbyte, prxword, printd -
+;        console output functions
+;
+;  SYNOPSIS
+;    prchr: procedure (chr)
+;    prstr: procedure (pstr)
+;    println: procedure (pstr)
+;    newline: procedure
+;    prxbyte: procedure (b)
+;    prxword: procedure (w)
+;    printd: procedure (n)
+;
 ;  DESCRIPTION
-;    Prints a single character on the console.
-;  PARAMETERS
-;    chr - character to print
-;  RETURN VALUE
-;    Doesn't return anything.
+;    These functions print to the console their respective arguments.
+;      - prchr (chr) prints one single character
+;      - prstr (pstr) prints a null-terminated string
+;      - println (pstr) prints a string and then goes to a new line
+;      - newline prints moves the cursor to a new line
+;      - prxbyte (b) prints the hexadecimal representation of one byte
+;      - prxword (w) prints the hexadecimal representation of one word
+;      - printd (n) print a signed integer in decimal form
+;
+;    The hexadecimal functions print unsigned numbers with leading
+;    zeros (a byte takes two characters and a word takes four).
+;    The decimal numbers are considered to be signed and do not
+;    include leading zeros.  For this reason they don't need a
+;    1-byte and a 2-byte version of the function.
+;
 ;******
+
+	cseg
 prchr:
 	push	bp
 	mov	bp, sp
+
 	mov	ax, 4[bp]
 	push	ax
 	call	osprchr
+
 	pop	bp
 	ret	2
 
-;****f* cons/prstr
-;  NAME
-;    prstr -- Prints a null-terminated 7-bit ASCII string.
-;  DESCRIPTION
-;    Prints the string given as parameter on the console.
-;  PARAMETERS
-;    pstr - address of the string to print
-;  RETURN VALUE
-;    Doesn't return anything
-;******
+	ret	2
+
+
+	dseg
+prstr_pstr	rw	1
+
+	cseg
 prstr:
 	push	bp
 	mov	bp, sp
-	mov	si, 4[bp]
-	mov	ah, 0
+
+	mov	ax, 4[bp]
+	mov	prstr_pstr, ax
+
 prstr_loop:
-	mov	al, [si]
+	mov	bx, prstr_pstr
+	mov	al, [bx]
 	cmp	al, 0
 	je	prstr_end
 	push	ax
-	call	osprchr
-	inc	si
+	call	prchr
+	inc	prstr_pstr
 	jmp	prstr_loop
 prstr_end:
+
 	pop	bp
 	ret	2
 
+
+println:
+	mov	bp, sp
+	push	bp
+	mov	ax, 4[bp]
+	push	ax
+	call	prstr
+	call	newline
+	pop	bp
+	ret	2
+
+
+newline:
+	mov	al, 0dh
+	push	ax
+	call	prchr
+
+	mov	al, 0ah
+	push	ax
+	call	prchr
+
+	ret
+
+
+prxbyte:
+	push	bp
+	mov	bp, sp
+
+	mov	al, 4[bp]
+	mov	cl, 4
+	shr	al, cl
+	push	ax
+	call	prnibble
+
+	mov	al, 4[bp]
+	and	al, 0fh
+	push	ax
+	call	prnibble
+
+	pop	bp
+	ret	2
+
+
+prnibble:
+	push	bp
+	mov	bp, sp
+
+	mov	al, 4[bp]
+	cmp	al, 10
+	jb	prnibble_lbl
+	add	al, 'A'-'0'-10
+prnibble_lbl:
+	add	al, '0'
+	push	ax
+	call	prchr
+
+	pop	bp
+	ret	2
+
+
+prxword:
+	push	bp
+	mov	bp, sp
+
+	mov	al, 5[bp]
+	push	ax
+	call	prxbyte
+
+	mov	al, 4[bp]
+	push	ax
+	call	prxbyte
+
+	pop	bp
+	ret	2
+
+
+	dseg
+printd_num	rw	1
+printd_arr	rb	5
+
+	cseg
+printd:
+	push	bp
+	mov	bp, sp
+
+	mov	ax, 4[bp]
+	cmp	ax, 0
+	jnl	printd_lbl1
+	mov	cx, '-'
+	push	cx
+	call	prchr
+	mov	ax, 4[bp]
+	neg	ax
+printd_lbl1:
+	mov	printd_num, ax
+	mov	bx, offset printd_arr
+
+	; loop
+	mov	si, 0
+printd_loop1:
+	cmp	ax, 0
+	je	printd_loop1end
+	mov	dx, 0
+	mov	cx, 10
+	div	cx
+	mov	[bx+si], dl
+	inc	si
+	jmp	printd_loop1
+printd_loop1end:
+
+	cmp	si, 0
+	jnz	printd_lbl2
+	inc	si
+	mov	byte ptr [bx], 0
+printd_lbl2:
+
+printd_loop2:
+	cmp	si, 0
+	jle	printd_loop2end
+	dec	si
+	mov	al, printd_arr[si]
+	add	al, '0'
+	push	ax
+	call	prchr
+	jmp	printd_loop2
+printd_loop2end:
+
+	pop	bp
+	ret	2
+
+
+readkey:
+	push	bp
+	mov	bp, sp
+
+	mov	ax, 4[bp]
+	push	ax
+	call	osrdkey
+
+	pop	bp
+	ret	2
+
+readln:
+	push	bp
+	mov	bp, sp
+
+	mov	ax, 6[bp]
+	push	ax
+	mov	ax, 4[bp]
+	push	ax
+	call	osrdln
+
+	pop	bp
+	ret	4
+
+
+	dseg
+readx_arr	rb	5
+
+	cseg
+readx:
+	push	bp
+	mov	bp, sp
+
+	mov	ax, offset readx_arr
+	push	ax
+	mov	ax, 5
+	push	ax
+	call	readln
+
+	mov	bx, offset readx_arr
+	mov	ax, 0
+readx_loop:
+	cmp	byte ptr [bx], 0
+	jz	readx_loop_end
+	mov	dx, 0
+	mov	cx, 16
+	mul	cx
+	mov	ch, 0
+	mov	cl, [bx]
+	or	cl, 20h
+	cmp	cl, 'a'
+	jb	readx_lbl1
+	cmp	cl, 'f'
+	ja	readx_lbl1
+	add	cl, '0'-'a'+10
+readx_lbl1:
+	sub	cl, '0'
+	add	ax, cx
+	inc	bx
+	jmp	readx_loop
+readx_loop_end:
+
+	pop	bp
+	ret
+
+
+	dseg
+readd_arr	rb	7
+
+	cseg
+readd:
+	push	bp
+	mov	bp, sp
+
+	; readln(arr,7)
+	mov	ax, offset readd_arr
+	push	ax
+	mov	ax, 7
+	push	ax
+	call	osrdln
+
+	; i := (arr[0] == '-' ? 1 : 0)
+	mov	si, 0
+	cmp	byte ptr readd_arr, '-'
+	jne	readd_lbl1
+	inc	si
+readd_lbl1:
+
+	; while arr[i] <> 0 do
+	mov	bx, offset readd_arr
+	mov	ax, 0
+readd_loop:
+	cmp	byte ptr [bx+si], 0
+	jz	readd_loop_end
+	; num := num * 10
+	mov	dx, 0
+	mov	cx, 10
+	mul	cx
+	mov	ch, 0
+	; num := num + (arr[i] - '0')
+	mov	cl, [bx+si]
+	sub	cl, '0'
+	add	ax, cx
+	; i := i + 1
+	inc	si
+	jmp	readd_loop
+readd_loop_end:
+
+	; if arr[0] = '-' then neg num
+	cmp	byte ptr [bx], '-'
+	jne	readd_lbl2
+	neg	ax
+readd_lbl2:
+
+	pop	bp
+	ret
+
 end
+

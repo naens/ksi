@@ -1,0 +1,130 @@
+public	strcmp, strlen, strcpy, xstr2word, dstr2int
+
+	cseg
+strcmp:
+	push	bp
+	mov	bp, sp
+
+	mov	si, 6[bp]
+	mov	di, 4[bp]
+strcmp_loop:
+	mov	al, [si]
+	sub	al, [di]
+	cmp	al, 0
+	jnz	strcmp_loop_end
+	cmp	byte ptr [si], 0
+	jz	strcmp_loop_end
+	inc	si
+	inc	di
+	jmp	strcmp_loop
+strcmp_loop_end:
+	cbw	; al->ax (signed)
+
+	pop	bp
+	ret	4
+
+
+strlen:
+	push	bp
+	mov	bp, sp
+
+	mov	bx, 4[bp]
+	mov	si, 0
+strlen_loop:
+	cmp	byte ptr [bx+si], 0
+	jz	strlen_loop_end
+	inc	si
+	jmp	strlen_loop
+strlen_loop_end:
+	mov	ax, si
+
+	pop	bp
+	ret	2
+
+strcpy:
+	push	bp
+	mov	bp, sp
+
+	mov	si, 6[bp]
+	mov	di, 4[bp]
+strcpy_loop:
+	mov	al, [si]
+	mov	[di], al
+	inc	si
+	inc	di
+	cmp	al, 0
+	jnz	strcpy_loop
+
+	pop	bp
+	ret	4
+
+	; convert hexadecimal character to binary integer value
+char_value:
+	or	al, 20h
+	cmp	al, 'a'
+	jl	char_value_lbl
+	cmp	al, 'f'
+	ja	char_value_lbl
+	sub	al, 'a'-'0'-10
+char_value_lbl:
+	sub	al, '0'
+	ret
+
+xstr2word:
+	push	bp
+	mov	bp, sp
+
+	mov	cx, 0
+	mov	ah, 0
+	mov 	bx, 4[bp]
+xstr2word_loop:
+	cmp	byte ptr [bx], 0
+	jz	xstr2word_loop_end
+	mov	al, [bx]
+	call	char_value
+	shl	cx, 1
+	shl	cx, 1
+	shl	cx, 1
+	shl	cx, 1
+	add	cx, ax
+	inc	bx
+	jmp	xstr2word_loop
+xstr2word_loop_end:
+	mov	ax, cx
+
+	pop	bp
+	ret	2
+
+dstr2int:
+	push	bp
+	mov	bp, sp
+
+	mov	si, 4[bp]
+	cmp	byte ptr [si], '-'
+	jne	dstr2int_lbl1
+	inc	si
+dstr2int_lbl1:
+	mov	ax, 0
+	mov	cx, 10
+	mov	bh, 0
+dstr2int_loop:
+	cmp	byte ptr [si], 0
+	jz	dstr2int_loop_end
+	mov	bl, [si]
+	sub	bl, '0'
+	mov	dx, 0
+	mul	cx
+	add	ax, bx
+	inc	si
+	jmp	dstr2int_loop
+dstr2int_loop_end:
+	mov	si, 4[bp]
+	cmp	byte ptr [si], '-'
+	jne	dstr2int_lbl2
+	neg	ax
+dstr2int_lbl2:
+
+	pop	bp
+	ret	2
+
+

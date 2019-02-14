@@ -1,36 +1,85 @@
-;****h* ksi/sys
-;  NAME
-;    sys -- System module
-;  DESCRIPTION
-;    Module containing system related functions.
-;  USES
-;    Operating system specific module (ccpm.a86, dos.a86)
-;******
+public exit, getdate, setdate, gettime, settime
 
-;dgroup	group	data
-cgroup	group	code
 
-code	cseg
-	public	term
-	extrn	osterm:near
+extrn osterm:near, osexec:near
+extrn osgetdate:near, ossetdate:near, osgettime:near, ossettime:near
 
-;****f* sys/term
-;  NAME
-;    term -- Terminate the program
-;  DESCRIPTION
-;    Terminates the program with exit code.
-;  PARAMETERS
-;    code - exit code to return
-;  RETURN VALUE
-;    Doesn't return anything.
-;******
-term:
+	cseg
+exit:
 	push	bp
 	mov	bp, sp
+
 	mov	ax, 4[bp]
 	push	ax
 	call	osterm
+
 	pop	bp
 	ret	2
 
+
+getdate:
+	push	bp
+	mov	bp, sp
+
+	mov	ax, 8[bp]
+	push	ax
+	mov	ax, 6[bp]
+	push	ax
+	mov	ax, 4[bp]
+	push	ax
+	call	osgetdate
+
+	pop	bp
+	ret	6
+
+
+setdate:
+	push	bp
+	mov	bp, sp
+
+	mov	ax, 8[bp]
+	push	ax
+	mov	ax, 6[bp]
+	push	ax
+	mov	ax, 4[bp]
+	push	ax
+	call	ossetdate
+
+	pop	bp
+	ret	6
+
+
+gettime:
+	push	bp
+	mov	bp, sp
+
+	mov	ax, 8[bp]
+	push	ax
+	mov	ax, 6[bp]
+	push	ax
+	mov	ax, 4[bp]
+	push	ax
+	call	osgettime
+
+	pop	bp
+	ret	6
+
+
+settime:
+	push	bp
+	mov	bp, sp
+
+	mov	ax, 8[bp]
+	push	ax
+	mov	ax, 6[bp]
+	push	ax
+	mov	ax, 4[bp]
+	push	ax
+	call	ossettime
+
+	pop	bp
+	ret	6
+
+
 end
+
