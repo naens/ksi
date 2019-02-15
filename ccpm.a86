@@ -22,8 +22,7 @@
 
 public osterm, osexec, osprchr, osrdkey, osrdln
 
-public osgetdate, ossetdate, osgettime, ossettime
-public year_days, month_days, day_of_year, to_ccpm_days, from_ccpm_days
+public osgetdate, ossetdate, osgettime, ossettime, osgetweekday
 
 
 extrn entry:near
@@ -554,5 +553,26 @@ ossettime:
 
 	pop	bp
 	ret	6
+
+
+osgetweekday:
+	push	bp
+	mov	bp, sp
+
+	mov	cl, t_get
+	mov	dx, offset time_of_day
+	int	ccpm
+
+	mov	ax, word ptr time_of_day
+	add	ax, 5
+	mov	dx, 0
+	mov	cx, 7
+	div	cx
+	mov	ax, dx
+	inc	ax
+
+	pop	bp
+	ret
+
 end
-
+

@@ -1,8 +1,9 @@
-public exit, getdate, setdate, gettime, settime
+public exit, getdate, setdate, gettime, settime, getweekday
 
 
 extrn osterm:near, osexec:near
 extrn osgetdate:near, ossetdate:near, osgettime:near, ossettime:near
+extrn osgetweekday:near
 
 	cseg
 exit:
@@ -81,5 +82,15 @@ settime:
 	ret	6
 
 
+
+getweekday:
+	push	bp
+	mov	bp, sp
+
+	call	osgetweekday
+
+	pop	bp
+	ret
+
 end
-
+
