@@ -1,0 +1,234 @@
+public entry
+extrn printd:near, newline:near, exit:near
+
+t_num	equ 77h
+t_bool	equ 88h
+
+
+	dseg
+val	rw	1
+
+	cseg
+
+entry:
+	mov	ax, 81h
+	push	ax
+	mov	ax, 0
+	push	ax
+	mov	ax, offset val
+	push	ax
+	call	read_factor
+	push	ax
+	call	printd
+	call	newline
+	push	val
+	call	printd
+	call	newline
+
+	mov	ax, 0
+	call	exit
+
+
+skip_spaces:
+	; parameters:
+	;	pbuf	in 6[bp]
+	;	i	in 4[bp]
+	push	bp
+	mov	bp, sp
+
+	mov	bx, 6[bp]		; pbuf
+	mov	si, 4[bp]		; i
+
+skip_loop:
+	cmp	byte ptr [bx+si], ' '
+	je	skip_loop_inc
+	cmp	byte ptr [bx+si], 9
+	jne	skip_loop_end
+skip_loop_inc:
+	inc	si
+	jmp	skip_loop
+skip_loop_end:
+	mov	ax, si
+
+	pop	bp
+	ret	4
+
+
+read_char:
+	; parameters:
+	;	pbuf	in 8[bp]
+	;	i	in 6[bp]
+	;	char	in 4[bp]
+	push	bp
+	mov	bp, sp
+
+	; skip spaces
+	push	word ptr 8[bp]	; pbuf
+	push	word ptr 6[bp]	; i
+	call	skip_spaces
+
+	mov	bx, 8[bp]	; pbuf
+	mov	si, ax
+	mov	al, 4[bp]	; char
+	cmp	al, [bx+si]
+	jne	rc_ne
+	inc	si
+	mov	ax, si
+	jmp	rc_end
+
+rc_ne:
+	mov	ax, -1
+rc_end:
+	pop	bp
+	ret	6
+
+read_number:
+	; parameters:
+	;	pbuf	in 8[bp]
+	;	i	in 6[bp]
+	;	pval	in 4[bp]
+	push	bp
+	mov	bp, sp
+
+	; skip spaces
+	push	word ptr 8[bp]		; pbuf
+	push	word ptr 6[bp]		; i
+	call	skip_spaces
+	mov	cx, ax			; i
+	mov	6[bp], ax		; store start of the number
+
+	; loop
+	mov	ax, 0
+	mov	bx, 8[bp]		; pbuf
+	mov	si, cx			; i
+rn_loop:
+	cmp	byte ptr [bx+si], '0'
+	jl	rn_loop_end
+	cmp	byte ptr [bx+si], '9'
+	ja	rn_loop_end
+	mov	cx, 10
+	mul	cx
+	mov	cl, [bx+si]
+	sub	cl, '0'
+	mov	ch, 0
+	add 	ax, cx
+	inc	si
+	jmp	rn_loop
+rn_loop_end:
+	mov	bx, 4[bp]		; pval
+	mov	[bx], ax
+	mov	ax, si
+	cmp	ax, 6[bp]
+	jne	rn_end
+	mov	ax, -1			; if no digit read, error
+rn_end:
+
+	pop	bp
+	ret	6
+
+
+read_expr:
+	; parameters:
+	;	pbuf	in 10[bp]
+	;	i	in 6[bp]
+	;	pval	in 8[bp]
+	;	ptype	in 4[bp]
+
+read_factor:
+	dseg
+value	rw	1
+typ	rw	1
+
+	cseg
+	; parameters:
+	;	pbuf	in 8[bp]
+	;	i	in 6[bp]
+	;	pval	in 4[bp]
+	; local variables:
+	; 	neg	in -2[bp]
+	push	bp
+	mov	bp, sp
+	sub	sp, 6
+
+	; skip spaces
+	push	word ptr 8[bp]		; pbuf
+	push	word ptr 6[bp]		; i
+	call	skip_spaces
+	mov	6[bp], ax		; i
+
+	; read '-'
+	push	word ptr 8[bp]		; pbuf
+	push	word ptr 6[bp]		; i
+	mov	al, '-'
+	push	ax
+	call	read_char
+	cmp	ax, -1
+	jne	rf_neg
+	mov	word ptr -2[bp], 0	; neg
+	jmp	rf_neg_end
+rf_neg:
+	mov	word ptr -2[bp], 1	; neg
+	mov	word ptr 6[bp], ax	; i
+rf_neg_end:
+
+	; read number
+	push	word ptr 8[bp]		; pbuf
+	push	word ptr 6[bp]		; i
+	mov	ax, offset value
+	push	ax
+	call	read_number
+	cmp	ax, -1
+	jne	rf_retval
+
+	; read '('
+	push	word ptr 8[bp]		; pbuf
+	push	word ptr 6[bp]		; i
+	mov	al, '('
+	push	ax
+	call	read_char
+	cmp	ax, -1
+	je	rf_end
+	mov	word ptr 6[bp], ax	; i
+
+	; read expr
+	push	word ptr 8[bp]		; pbuf
+	push	word ptr 6[bp]		; i
+	mov	ax, offset value
+	push	ax
+	mov	ax, offset typ
+	push	ax
+	call	read_expr
+	cmp	ax, -1
+	je	rf_end
+	cmp	typ, t_num
+	je	rf_expr_end
+	mov	ax, -1
+	jmp	rf_end
+rf_expr_end:
+	mov	6[bp], ax		; i
+
+	; read ')'
+	push	word ptr 8[bp]		; pbuf
+	push	word ptr 6[bp]		; i
+	mov	al, ')'
+	push	ax
+	call	read_char
+	cmp	ax, -1
+	je	rf_end
+
+	; return the value (apply negation if needed)
+	mov	ax, 6[bp]		; i
+rf_retval:
+	mov	cx, value
+	cmp	word ptr -2[bp], 0	; neg
+	je	rf_pos
+	neg	cx
+rf_pos:
+	mov	bx, 4[bp]		; pval
+	mov	[bx], cx
+
+rf_end:
+	add	sp, 6
+	pop	bp
+	ret	6
+
