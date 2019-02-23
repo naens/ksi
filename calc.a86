@@ -1,8 +1,12 @@
 public entry
 extrn printd:near, newline:near, exit:near
 
-t_num	equ 77h
-t_bool	equ 88h
+t_num	equ	77h
+t_bool	equ	88h
+op_mult	equ	44h
+op_div	equ	55h
+op_mod	equ	66h
+
 
 
 	dseg
@@ -127,12 +131,13 @@ rn_end:
 	ret	6
 
 
-read_expr:
+read_string:
 	; parameters:
-	;	pbuf	in 10[bp]
+	;	pbuf	in 8[bp]
 	;	i	in 6[bp]
-	;	pval	in 8[bp]
-	;	ptype	in 4[bp]
+	;	pstr	in 4[bp]
+
+
 
 read_factor:
 	dseg
@@ -149,12 +154,6 @@ typ	rw	1
 	push	bp
 	mov	bp, sp
 	sub	sp, 6
-
-	; skip spaces
-	push	word ptr 8[bp]		; pbuf
-	push	word ptr 6[bp]		; i
-	call	skip_spaces
-	mov	6[bp], ax		; i
 
 	; read '-'
 	push	word ptr 8[bp]		; pbuf
@@ -231,4 +230,122 @@ rf_end:
 	add	sp, 6
 	pop	bp
 	ret	6
-
+
+
+	; read_fact_op
+	dseg
+rfo_mod_str	db	'mod', 0
+
+	cseg
+read_fact_op:
+	; parameters:
+	;	pbuf	in 8[bp]
+	;	i	in 6[bp]
+	;	p_op	in 4[bp]
+
+	push	bp
+	mov	bp, sp
+
+	; read '*'
+	push	word ptr 8[bp]			; pbuf
+	push	word ptr 6[bp]			; i
+	mov	al, '*'
+	push	ax
+	call	read_char
+	cmp	ax, -1
+	je	rfo_mult_end
+	mov	cx, op_mult
+	jmp	rfo_retval		; op in cx, index in ax
+rfo_mult_end:
+
+	; read '/'
+	push	word ptr 8[bp]			; pbuf
+	push	word ptr 6[bp]			; i
+	mov	al, '/'
+	push	ax
+	call	read_char
+	cmp	ax, -1
+	je	rfo_div_end
+	mov	cx, op_div
+	jmp	rfo_retval
+rfo_div_end:
+
+	; read 'mod'
+	push	word ptr 8[bp]			; pbuf
+	push	word ptr 6[bp]
+	mov	ax, offset rfo_mod_str
+	push	ax
+	call	read_string
+	cmp	ax, -1
+	je	rfo_end
+	mov	cx, op_mod
+
+rfo_retval:
+	mov	bx, 4[bp]
+	mov	[bx], cx
+
+rfo_end:
+	pop	bp
+	ret	6
+
+	; read_term
+	dseg
+rt_tmpval	rw	1
+
+	cseg
+
+read_term:
+	; parameters:
+	;	pbuf	in 8[bp]
+	;	i	in 6[bp]
+	;	pval	in 4[bp]
+	; local variables:
+	;	val	in -2[bp]
+	;	fact_op	in -4[bp]
+
+	push	bp
+	mov	bp, sp
+	sub	sp, 4
+
+	; read factor
+	push	word ptr 8[bp]		; pbuf
+	push	word ptr 6[bp]		; i
+	mov	ax, offset rt_tmpval
+	push	ax
+	call	read_factor
+	cmp	ax, -1
+	je	rt_end
+	mov	ax, rt_tmpval
+	mov	-4[bp], ax
+
+
+	; read fact_op
+	push	word ptr 8[bp]		; pbuf
+	push	word ptr 6[bp]		; i
+	mov	ax, rt_tmpval
+	push	ax
+	call	read_fact_op
+
+	; loop: while still more fact_op, continue
+
+	; read factor
+
+	; read fact_op
+
+	; return
+rt_end:
+	add	sp, 4
+	pop	bp
+	ret	6
+
+
+
+
+read_expr:
+	; parameters:
+	;	pbuf	in 10[bp]
+	;	i	in 6[bp]
+	;	pval	in 8[bp]
+	;	ptype	in 4[bp]
+
+
