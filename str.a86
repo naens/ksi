@@ -1,130 +1,103 @@
-public	strcmp, strlen, strcpy, xstr2word, dstr2int
+;****h* ksi/str
+;  NAME
+;    str - the string handling module
+;  DESCRIPTION
+;    This module contains functions related to the handling of the
+;    strings.  It contains, for example, functions for comparison,
+;    conversion, copying and other.
+;******
 
-	cseg
-strcmp:
+;****f* str/string_compare, string_length, string_copy
+;  NAME
+;    string_compare, string_length, string_copy - functions for
+;        string comparison, length and copying
+;  SYNOPSIS
+;    string_compare: procedure (pstr1, pstr2): integer
+;    string_length: procedure (pstr): word
+;    string_copy: procedure (psrc, pdest, n): word
+;  DESCRIPTION
+;    The function string_compare performs a comparison on strings and
+;    returns 0 if they are equal.  Otherwise, a positive value if
+;    pstr1 is greater in character codes, otherwise, returns a negative
+;    value.
+;    The function string_length determines the length of a
+;    null-terminated string.
+;    string_copy copies the string from psrc to pdest, with the limit
+;    of n characters.
+;  RETURN VALUE
+;    string_compare: returns the result of the comparison of the two
+;    strings, 0 if they are equal, a negative value if the first
+;    of the two strings is before the second in ASCII ordering, and
+;    a positive value otherwise.
+;    string_length returns the length of the string.
+;    string_copy returns the number of characters copied.
+;******
+
+
+string_compare:
 	push	bp
 	mov	bp, sp
 
-	mov	si, 6[bp]
-	mov	di, 4[bp]
-strcmp_loop:
+	mov	si, 6[bp]		; pstr1
+	mov	di, 4[bp]		; pstr2
+
+scmp_loop:
 	mov	al, [si]
 	sub	al, [di]
-	cmp	al, 0
-	jnz	strcmp_loop_end
-	cmp	byte ptr [si], 0
-	jz	strcmp_loop_end
+	jne	scmp_loop_end
 	inc	si
 	inc	di
-	jmp	strcmp_loop
-strcmp_loop_end:
-	cbw	; al->ax (signed)
-
+	jmp	scmp_loop
+scmp_loop_end:
+	cbw
 	pop	bp
 	ret	4
 
-
-strlen:
+string_length:
 	push	bp
 	mov	bp, sp
-
-	mov	bx, 4[bp]
 	mov	si, 0
-strlen_loop:
+	mov	bx, 4[bp]		; pstr
+sl_loop:
 	cmp	byte ptr [bx+si], 0
-	jz	strlen_loop_end
+	je	sl_loop_end
 	inc	si
-	jmp	strlen_loop
-strlen_loop_end:
+	jmp	sl_loop
+sl_loop_end:
 	mov	ax, si
-
 	pop	bp
 	ret	2
 
-strcpy:
+string_copy:
+	; parameters:
+	;	psrc	in 8[bp]
+	;	pdest	in 6[bp]
+	;	n	in 4[bp]
 	push	bp
 	mov	bp, sp
 
-	mov	si, 6[bp]
-	mov	di, 4[bp]
-strcpy_loop:
+	mov	si, 8[bp]		; psrc
+	mov	di, 6[bp]		; pdest
+	mov	cx, 4[bp]		; n
+
+scpy_loop:
+	cmp	cx, 0
+	je	scpy_loop_end
+	cmp	byte ptr [si], 0
+	jne	scpy_loop_lbl
+	mov	byte ptr [di], 0
+	jmp	scpy_loop_end
+scpy_loop_lbl:
 	mov	al, [si]
 	mov	[di], al
 	inc	si
 	inc	di
-	cmp	al, 0
-	jnz	strcpy_loop
+	jmp	scpy_loop
+scpy_loop_end:
 
+	mov	ax, 4[bp]		; n
+	sub	ax, cx
 	pop	bp
-	ret	4
+	ret	6
 
-	; convert hexadecimal character to binary integer value
-char_value:
-	or	al, 20h
-	cmp	al, 'a'
-	jl	char_value_lbl
-	cmp	al, 'f'
-	ja	char_value_lbl
-	sub	al, 'a'-'0'-10
-char_value_lbl:
-	sub	al, '0'
-	ret
-
-xstr2word:
-	push	bp
-	mov	bp, sp
-
-	mov	cx, 0
-	mov	ah, 0
-	mov 	bx, 4[bp]
-xstr2word_loop:
-	cmp	byte ptr [bx], 0
-	jz	xstr2word_loop_end
-	mov	al, [bx]
-	call	char_value
-	shl	cx, 1
-	shl	cx, 1
-	shl	cx, 1
-	shl	cx, 1
-	add	cx, ax
-	inc	bx
-	jmp	xstr2word_loop
-xstr2word_loop_end:
-	mov	ax, cx
-
-	pop	bp
-	ret	2
-
-dstr2int:
-	push	bp
-	mov	bp, sp
-
-	mov	si, 4[bp]
-	cmp	byte ptr [si], '-'
-	jne	dstr2int_lbl1
-	inc	si
-dstr2int_lbl1:
-	mov	ax, 0
-	mov	cx, 10
-	mov	bh, 0
-dstr2int_loop:
-	cmp	byte ptr [si], 0
-	jz	dstr2int_loop_end
-	mov	bl, [si]
-	sub	bl, '0'
-	mov	dx, 0
-	mul	cx
-	add	ax, bx
-	inc	si
-	jmp	dstr2int_loop
-dstr2int_loop_end:
-	mov	si, 4[bp]
-	cmp	byte ptr [si], '-'
-	jne	dstr2int_lbl2
-	neg	ax
-dstr2int_lbl2:
-
-	pop	bp
-	ret	2
-
-
+
