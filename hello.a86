@@ -1,0 +1,26 @@
+;****p* ksi/hello
+;  NAME
+;    hello - A program that displays the "Hello, World!" string
+;  DESCRIPTION
+;    This program demonstrates the way the library is used.  It uses
+;    only two functions of the library: print_line from the cons
+;    library and terminate from the sys library.  This program
+;    also contains an entry label, entry and demonstrates how to use
+;    it.  After finishing the text output, the program returns a
+;    status value, in this case, 0.
+;******
+
+public entry
+extrn print_line:near, terminate:near
+
+	dseg
+msg	db	'Hello, World!', 0
+
+	cseg
+entry:
+	mov	ax, offset msg
+	push	ax
+	call	print_line
+
+	mov	ax, 0
+	call	terminate

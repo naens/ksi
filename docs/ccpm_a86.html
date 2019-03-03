@@ -20,13 +20,12 @@
 <a class="menuitem" href="./masterindex.html#top">Index</a>
 <a class="menuitem" href="./robo_functions.html#top">Functions</a>
 <a class="menuitem" href="./robo_modules.html#top">Modules</a>
+<a class="menuitem" href="./robo_program.html#top">Program</a>
 </div> <!-- navigation -->
 <div id="content">
 <h3>TABLE OF CONTENTS</h3>
 <ul>
 <li>1. <a href="#robo0">ksi/ccpm</a></li>
-<li>2. <a href="#robo5">os/osprchr</a>, <a href="#robo5">osrdkey</a>, <a href="#robo5">osrdln</a></li>
-<li>3. <a href="#robo8">os/osterm</a>, <a href="#robo8">osexec</a></li>
 </ul>
 <hr />
 <a name="ksi2fccpm"></a>
@@ -34,80 +33,16 @@
 
 <p>[ <a href="#robo_top_of_doc">Top</a> ] [ <a href="./robo_modules.html#robo_top_of_doc">Modules</a> ]</p>
 <p class="item_name">NAME</p>
-<pre>    <strong>ccpm</strong> - Concurrent CP/M Module
+<pre>    <strong>ccpm</strong> - implementation of the OS functions for CCP/M
 </pre>
 <p class="item_name">DESCRIPTION</p>
-<pre>    The Operating System module for Concurrent CP/M-86.  Contains
-    the functions needed so that the ksi library could communicate
-    with the OS.  These functions should only be called from the
-    library.
-
-    This module also provides the prologue and the epilogue of the
-    program.  So the program should be linked in a way that it
-    enters it first.
-
-    Every program should call the exit function of the sys library
-    when it's terminating.  This function calls the epilogue function
-    defined in this module, which is called <a href="#robo8">osterm</a>.
-</pre>
-
-<hr />
-<a name="os2fosprchr"></a>
-<a name="robo5"></a><h2>os/osprchr, osrdkey,<br />osrdln [ Functions ]</h2>
-
-<p>[ <a href="#robo_top_of_doc">Top</a> ] [ <a href="./os_doc.html#robo3">os</a> ] [ <a href="./robo_functions.html#robo_top_of_doc">Functions</a> ]</p>
-<p class="item_name">NAME</p>
-<pre>    <strong>osprchr</strong>, <strong>osrdkey</strong>, <strong>osrdln</strong> - functions for the console
-</pre>
-<p class="item_name">SYNOPSIS</p>
-<pre>    <strong>osprchr</strong>: procedure (b)
-    <strong>osrdkey</strong>: procedure (pstatus) word
-    <strong>osrdln</strong>: procedure (pstr, len) word
-</pre>
-<p class="item_name">DESCRIPTION</p>
-<pre>    The <strong>osprchr</strong> function takes one byte argument b and displays it
-    as ASCII character on the console.
-
-    The <strong>osrdkey</strong> function takes one address argument pstatus.  It
-    reads one key from the keyboard, stores the shift key status in
-    pstatus and returns the key in ax.  If the control key was
-    pressed together with the key, the key pressed is returned
-    as an uppercase character.  The ASCII code of the character
-    is in al, and ah contains the scan code.
-
-    The function <strong>osrdln</strong> takes the address of the string pstr, and the
-    maximum length len of the string len as arguments.  It reads one
-    line of input and stores maximum len bytes in the buffer at
-    address pstr.  The string is null-terminated.
-</pre>
-<p class="item_name">RETURN VALUE</p>
-<pre>    <strong>osprchr</strong> doesn't return a value.
-    <strong>osrdkey</strong> returns the ASCII code in al and the scan code in ah.
-    <strong>osrdln</strong> returns the length of the string read.
-</pre>
-
-<hr />
-<a name="os2fosterm"></a>
-<a name="robo8"></a><h2>os/osterm, osexec [ Functions ]</h2>
-
-<p>[ <a href="#robo_top_of_doc">Top</a> ] [ <a href="./os_doc.html#robo3">os</a> ] [ <a href="./robo_functions.html#robo_top_of_doc">Functions</a> ]</p>
-<p class="item_name">NAME</p>
-<pre>    <strong>osterm</strong>, <strong>osexec</strong> - process related functions
-</pre>
-<p class="item_name">DESCRIPTION</p>
-<pre>    The function <strong>osterm</strong> terminates the current program with the
-    status code specified.
-
-    <strong>osexec</strong> executes a program and returns to the caller.
-</pre>
-<p class="item_name">RETURN VALUE</p>
-<pre>    <strong>osterm</strong> doesn't return any value.
-    <strong>osexec</strong> returns the status code of the program that was ececuted.
+<pre>    This module implements the functions defined in <a href="./os_nfo.html#robo_top_of_doc">os.nfo</a> file.
+    It can be linked with the usual DRI link86.cmd.
 </pre>
 
 </div> <!-- content -->
 <div id="footer">
-<p>Generated from ./ccpm.a86 with <a href="http://www.xs4all.nl/~rfsber/Robo/robodoc.html">ROBODoc</a> V4.99.43 on Thu Feb 14 2019 22:16:55
+<p>Generated from ./ccpm.a86 with <a href="http://www.xs4all.nl/~rfsber/Robo/robodoc.html">ROBODoc</a> V4.99.43 on Sat Mar 02 2019 15:06:29
 </p>
 </div> <!-- footer -->
 </body>

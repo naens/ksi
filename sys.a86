@@ -1,96 +1,29 @@
-public exit, getdate, setdate, gettime, settime, getweekday
+;****h* ksi/sys
+;  NAME
+;    sys - module that provides operating system functions
+;  SYNOPSIS
+;    get_args: procedure (pargc, pargv)
+;    execute: procedure (pcmd)
+;    terminate: procedure (code)
+;  DESCRIPTION
+;    The function of the module sys is to provide functions that are
+;    typically provided by the Operating System.  These include
+;    get_args, a function that returns the command line arguments,
+;    execute, to execute a program, and terminate, a function that
+;    terminates the executing program.
+;******
+public terminate
+extrn os_terminate:near
 
-
-extrn osterm:near, osexec:near
-extrn osgetdate:near, ossetdate:near, osgettime:near, ossettime:near
-extrn osgetweekday:near
-
-	cseg
-exit:
+terminate:
+	; parameters:
+	;	status	in 4[bp]
 	push	bp
 	mov	bp, sp
 
-	mov	ax, 4[bp]
+	mov	ax, 4[bp]		; status
 	push	ax
-	call	osterm
+	call	os_terminate
 
 	pop	bp
 	ret	2
-
-
-getdate:
-	push	bp
-	mov	bp, sp
-
-	mov	ax, 8[bp]
-	push	ax
-	mov	ax, 6[bp]
-	push	ax
-	mov	ax, 4[bp]
-	push	ax
-	call	osgetdate
-
-	pop	bp
-	ret	6
-
-
-setdate:
-	push	bp
-	mov	bp, sp
-
-	mov	ax, 8[bp]
-	push	ax
-	mov	ax, 6[bp]
-	push	ax
-	mov	ax, 4[bp]
-	push	ax
-	call	ossetdate
-
-	pop	bp
-	ret	6
-
-
-gettime:
-	push	bp
-	mov	bp, sp
-
-	mov	ax, 8[bp]
-	push	ax
-	mov	ax, 6[bp]
-	push	ax
-	mov	ax, 4[bp]
-	push	ax
-	call	osgettime
-
-	pop	bp
-	ret	6
-
-
-settime:
-	push	bp
-	mov	bp, sp
-
-	mov	ax, 8[bp]
-	push	ax
-	mov	ax, 6[bp]
-	push	ax
-	mov	ax, 4[bp]
-	push	ax
-	call	ossettime
-
-	pop	bp
-	ret	6
-
-
-
-getweekday:
-	push	bp
-	mov	bp, sp
-
-	call	osgetweekday
-
-	pop	bp
-	ret
-
-end
-

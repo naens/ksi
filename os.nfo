@@ -1,0 +1,42 @@
+#****h* ksi/os
+#  NAME
+#    os - Operating System dependent functions
+#  DESCRIPTION
+#    This modules contain all function, the implementation of which
+#    is dependent on the Operating System.  These functions are of
+#    many different kinds: file Input and Output, console Input and
+#    Output, process management, memory-related functions,
+#    date-and-time getting and setting functions, file system
+#    management, and others.
+#******
+
+#****f* os/os_terminate
+#  NAME
+#    os_terminate - exit from the executing program with an exit code
+#  SYNOPSIS
+#    os_terminate: procedure (status)
+#  DESCRIPTION
+#    Exit from the currently executing program and return the status
+#    code
+#******
+
+#****f* os/os_print_char
+#  NAME
+#    os_print_char - print a single character on the console
+#  SYNOPSIS
+#    os_print_char: procedure (char)
+#  DESCRIPTION
+#    This function causes a single character to be printed on screen
+#    and the cursor advances at the same time, to the right or on a
+#    new line.  The screen is scrolled if it's the last character of
+#    the last line.
+#******
+
+#****f* os/os_new_line
+#  NAME
+#    os_new_line - go to the new line
+#  SYNOPSIS
+#    os_new_line: procedure
+#  DESCRIPTION
+#    This function causes the cursor to go to the new line.
+#******

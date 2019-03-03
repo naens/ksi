@@ -20,13 +20,14 @@
 <a class="menuitem" href="./masterindex.html#top">Index</a>
 <a class="menuitem" href="./robo_functions.html#top">Functions</a>
 <a class="menuitem" href="./robo_modules.html#top">Modules</a>
+<a class="menuitem" href="./robo_program.html#top">Program</a>
 </div> <!-- navigation -->
 <div id="content">
 <h3>TABLE OF CONTENTS</h3>
 <ul>
 <li>1. <a href="#robo1">ksi/cons</a></li>
 <ul>
-<li>1.1. <a href="#robo4">cons/prchr</a>, <a href="#robo4">prstr</a>, <a href="#robo4">println</a>, <a href="#robo4">newline</a>, <a href="#robo4">prxbyte</a>, <a href="#robo4">prxword</a>, <a href="#robo4">printd</a></li>
+<li>1.1. <a href="#robo5">cons/print_char</a>, <a href="#robo5">print_string</a>, <a href="#robo5">print_line</a>, <a href="#robo5">new_line</a></li>
 </ul>
 </ul>
 <hr />
@@ -35,55 +36,45 @@
 
 <p>[ <a href="#robo_top_of_doc">Top</a> ] [ <a href="./robo_modules.html#robo_top_of_doc">Modules</a> ]</p>
 <p class="item_name">NAME</p>
-<pre>    <strong>cons</strong> - console module
+<pre>    ksi - console I/O module
 </pre>
 <p class="item_name">DESCRIPTION</p>
-<pre>    This module contains the input and output functions for the
-    console.  There are two categories of functions: the output
-    functions (<a href="#robo4">prchr</a>, <a href="#robo4">prstr</a>, <a href="#robo4">println</a>, fnewline, <a href="#robo4">prxbyte</a>, <a href="#robo4">prxword</a>),
-    and the input functions (readkey, readln, readx, readd).
-    These are functions for reading and writing characters, strings
-    and numbers.
+<pre>    This module contains functions that perform console Input and
+    Output.
 </pre>
 
 <hr />
-<a name="cons2fprchr"></a>
-<a name="robo4"></a><h2>cons/prchr, prstr,<br />println, newline,<br />prxbyte, prxword,<br />printd [ Functions ]</h2>
+<a name="cons2fprint5fchar"></a>
+<a name="robo5"></a><h2>cons/print_char, print_string,<br />print_line, new_line [ Functions ]</h2>
 
 <p>[ <a href="#robo_top_of_doc">Top</a> ] [ <a href="#robo1">cons</a> ] [ <a href="./robo_functions.html#robo_top_of_doc">Functions</a> ]</p>
 <p class="item_name">NAME</p>
-<pre>    <strong>prchr</strong>, <strong>prstr</strong>, <strong>println</strong>, <strong>newline</strong>, prhexbyte, <strong>prxword</strong>, <strong>printd</strong> -
-        console output functions
+<pre>    <strong>print_char</strong>, <strong>print_string</strong>, <strong>print_line</strong>, <strong>new_line</strong> - functions
+        to print strings and characters
 </pre>
 <p class="item_name">SYNOPSIS</p>
-<pre>    <strong>prchr</strong>: procedure (chr)
-    <strong>prstr</strong>: procedure (pstr)
-    <strong>println</strong>: procedure (pstr)
-    <strong>newline</strong>: procedure
-    <strong>prxbyte</strong>: procedure (b)
-    <strong>prxword</strong>: procedure (w)
-    <strong>printd</strong>: procedure (n)
+<pre>    <strong>print_char</strong>: procedure (char)
+    <strong>print_string</strong>: procedure (pstr)
+    <strong>print_line</strong>: procedure (pstr)
+    <strong>new_line</strong>: procedure
 </pre>
 <p class="item_name">DESCRIPTION</p>
-<pre>    These functions print to the console their respective arguments.
-      - <strong>prchr</strong> (chr) prints one single character
-      - <strong>prstr</strong> (pstr) prints a null-terminated string
-      - <strong>println</strong> (pstr) prints a string and then goes to a new line
-      - <strong>newline</strong> prints moves the cursor to a new line
-      - <strong>prxbyte</strong> (b) prints the hexadecimal representation of one byte
-      - <strong>prxword</strong> (w) prints the hexadecimal representation of one word
-      - <strong>printd</strong> (n) print a signed integer in decimal form
-
-    The hexadecimal functions print unsigned numbers with leading
-    zeros (a byte takes two characters and a word takes four).
-    The decimal numbers are considered to be signed and do not
-    include leading zeros.  For this reason they don't need a
-    1-byte and a 2-byte version of the function.
+<pre>    These functions print characters or strings and do not return
+    anything.
+    * <strong>print_char</strong> prints a single character
+    * <strong>print_string</strong> prints a 0h terminated string
+    * <strong>print_line</strong> prints a 0h terminated string and goes to the new
+      line
+    * <strong>new_line</strong> simply goes to the new line without actually printing
+      any visible character
+</pre>
+<p class="item_name">RETURN VALUE</p>
+<pre>    These functions do not return any value.
 </pre>
 
 </div> <!-- content -->
 <div id="footer">
-<p>Generated from ./cons.a86 with <a href="http://www.xs4all.nl/~rfsber/Robo/robodoc.html">ROBODoc</a> V4.99.43 on Thu Feb 14 2019 22:16:55
+<p>Generated from ./cons.a86 with <a href="http://www.xs4all.nl/~rfsber/Robo/robodoc.html">ROBODoc</a> V4.99.43 on Sat Mar 02 2019 15:06:29
 </p>
 </div> <!-- footer -->
 </body>

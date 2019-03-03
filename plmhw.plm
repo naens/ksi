@@ -1,0 +1,31 @@
+/****p* ksi/plmhw
+ *  NAME
+ *    plmhw - A program that displays "Hello!" on the console.
+ *  DESCRIPTION
+ *    This is a program written in the PL/M programming language in order to
+ *    demonstrate how the Assembly language library can be used from PL/M.
+ *    This program calls two procedures: print_line and terminate.  It
+ *    terminates with the status code 0.   In order to be usable from the
+ *    assembly code, this program contains the entry label that is called
+ *    after the initialization.
+ ******
+ */
+
+plmhw:
+do;
+
+    declare entry label public;
+
+    print_line: procedure (pstr) external;
+        declare pstr address;
+    end print_line;
+
+    terminate: procedure (status) external;
+        declare status byte;
+    end terminate;
+
+entry:
+    call print_line(.('Hello!!!', 0));
+    call terminate(0);
+
+end plmhw;
