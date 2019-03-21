@@ -1,0 +1,9 @@
+public entry
+extrn terminate:near
+
+	cseg
+entry:
+	mov	ax, 0
+	call	terminate
+
+end
