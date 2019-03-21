@@ -10,6 +10,7 @@
 public print_line
 
 extrn os_print_char:near, os_new_line:near
+extrn os_read_key:near, os_read_line:near
 
 
 ;****f* cons/print_char, print_string, print_line, new_line
@@ -35,36 +36,131 @@ extrn os_print_char:near, os_new_line:near
 ;******
 
 
-; print_line: procedure (pstr)
+; print_char: output a single character on the console
+print_char:
+	; parameters:
+	;	char	in 4[bp] (byte)
+	push	bp
+	mov	bp, sp
+
+	; call the os function for printing a character
+	mov	al, 4[bp]
+	push	ax
+	call	os_print_char
+
+	pop	bp
+	ret	2
+
+
+; print_string: procedure (pstr)
 	dseg
-pl_ptr	rw	1
+ps_ptr	rw	1
 
 	cseg
-print_line:
+print_string:
 	; parameters:
 	;	pstr in 4[bp]
 	; static variable:
-	;	pl_ptr: pointer to the current location in the string
+	;	ps_ptr: pointer to the current location in the string
 	push	bp
 	mov	bp, sp
 
 	; initialize the pointer to the string to print
-	mov	ax, 4[bp]
-	mov	pl_ptr, ax
+	mov	ax, 4[bp]		; pstr
+	mov	ps_ptr, ax
 
-	; print character at [pl_ptr], and advance pl_ptr
-pl_loop:
-	mov	bx, pl_ptr
+	; print character at [ps_ptr], and advance ps_ptr
+ps_loop:
+	mov	bx, ps_ptr
 	cmp	byte ptr [bx], 0
-	je	pl_loop_end
+	je	ps_loop_end
 	push	word ptr [bx]
 	call	os_print_char
-	inc	pl_ptr
-	jmp	pl_loop
-pl_loop_end:
+	inc	ps_ptr
+	jmp	ps_loop
+ps_loop_end:
 
-	; go to new line at the end of the string
+	pop	bp
+	ret	2
+
+
+; print_line: prints a string followed by a new line
+print_line:
+	; parameters:
+	;	pstr	in 4[bp]
+	push	bp
+	mov	bp, sp
+
+	mov	ax, 4[bp]		; pstr
+	push	ax
+	call	print_string
 	call	os_new_line
 
 	pop	bp
 	ret	2
+
+
+; new_line: print new line
+new_line:
+	push	bp
+	mov	bp, sp
+
+	call	os_new_line
+
+	pop	bp
+	ret
+
+;****f* cons/read_key, read_line
+;  NAME
+;    read_key, read_line - functions to read from the console
+;  SYNOPSIS
+;    read_key: procedure: byte
+;    read_line: procedure (length, pbuf): integer
+;  DESCRIPTION
+;    * read_key reads one character from standard input without
+;      needing new line to be entered.
+;    * read_line reads a line from standard input of maximum length
+;      and returns the length read.  The string is always null-
+;      terminated.
+;  RETURN VALUE
+;    The return value of read_key is the character entered.  If shift
+;    or Control keys were pressed when entered the character, the
+;    value is modified accordingly.
+;    The return value of the read_line function is the length of the
+;    line entered.  It cannot be greater than length - 1 and is
+;    terminated by a zero byte.
+;******
+
+
+; read_key: reads a single character from the console
+read_key:
+	push	bp
+	mov	bp, sp
+
+	call	os_read_key
+
+	pop	bp
+	ret
+
+; read_line: reads a line from the console into buffer, returns the
+;    length of the string read
+read_line:
+	; parameters:
+	;	length	in 6[bp]
+	;	pbuf	in 4[bp]
+	; returns:
+	;	length	in ax
+	push	bp
+	mov	bp, sp
+
+	mov	ax, 6[bp]		; length
+	push	ax
+	mov	ax, 4[bp]		; pbuf
+	push	ax
+	call	os_read_line
+
+	pop	bp
+	ret	4
+
+
+end.
