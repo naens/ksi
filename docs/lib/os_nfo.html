@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+                      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html  xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-type" content="text/html; charset=ISO-8859-1" />
+<link rel="stylesheet" href="../robodoc.css" type="text/css" />
+<title>./lib/os.nfo</title>
+<!-- Source: ./lib/os.nfo -->
+<!-- Generated with ROBODoc Version 4.99.43 (Feb  2 2019) -->
+</head>
+<body>
+<div id="logo">
+<a name="robo_top_of_doc"></a>
+</div> <!-- logo -->
+<div id="navigation">
+<a class="menuitem" href="../toc_index.html#top">Table of Contents</a>
+<a class="menuitem" href="../robo_sourcefiles.html#top">Sourcefiles</a>
+<a class="menuitem" href="../masterindex.html#top">Index</a>
+<a class="menuitem" href="../robo_functions.html#top">Functions</a>
+<a class="menuitem" href="../robo_modules.html#top">Modules</a>
+<a class="menuitem" href="../robo_program.html#top">Program</a>
+</div> <!-- navigation -->
+<div id="content">
+<h3>TABLE OF CONTENTS</h3>
+<ul>
+<li>1. <a href="#robo2">ksi/os</a></li>
+<ul>
+<li>1.1. <a href="#robo11">os/os_new_line</a></li>
+<li>1.2. <a href="#robo12">os/os_print_char</a></li>
+<li>1.3. <a href="#robo13">os/os_terminate</a></li>
+</ul>
+</ul>
+<hr />
+<a name="ksi2fos"></a>
+<a name="robo2"></a><h2>ksi/os [ Modules ]</h2>
+
+<p>[ <a href="#robo_top_of_doc">Top</a> ] [ <a href="../robo_modules.html#robo_top_of_doc">Modules</a> ]</p>
+<p class="item_name">NAME</p>
+<pre>    <strong>os</strong> - Operating System dependent functions
+</pre>
+<p class="item_name">DESCRIPTION</p>
+<pre>    This modules contain all function, the implementation of which
+    is dependent on the Operating System.  These functions are of
+    many different kinds: file Input and Output, console Input and
+    Output, process management, memory-related functions,
+    date-and-time getting and setting functions, file system
+    management, and others.
+</pre>
+
+<hr />
+<a name="os2fos5fnew5fline"></a>
+<a name="robo11"></a><h2>os/os_new_line [ Functions ]</h2>
+
+<p>[ <a href="#robo_top_of_doc">Top</a> ] [ <a href="#robo2">os</a> ] [ <a href="../robo_functions.html#robo_top_of_doc">Functions</a> ]</p>
+<p class="item_name">NAME</p>
+<pre>    <strong>os_new_line</strong> - go to the new line
+</pre>
+<p class="item_name">SYNOPSIS</p>
+<pre>    <strong>os_new_line</strong>: procedure
+</pre>
+<p class="item_name">DESCRIPTION</p>
+<pre>    This function causes the cursor to go to the new line.
+</pre>
+
+<hr />
+<a name="os2fos5fprint5fchar"></a>
+<a name="robo12"></a><h2>os/os_print_char [ Functions ]</h2>
+
+<p>[ <a href="#robo_top_of_doc">Top</a> ] [ <a href="#robo2">os</a> ] [ <a href="../robo_functions.html#robo_top_of_doc">Functions</a> ]</p>
+<p class="item_name">NAME</p>
+<pre>    <strong>os_print_char</strong> - print a single character on the console
+</pre>
+<p class="item_name">SYNOPSIS</p>
+<pre>    <strong>os_print_char</strong>: procedure (char)
+</pre>
+<p class="item_name">DESCRIPTION</p>
+<pre>    This function causes a single character to be printed on screen
+    and the cursor advances at the same time, to the right or on a
+    new line.  The screen is scrolled if it's the last character of
+    the last line.
+</pre>
+
+<hr />
+<a name="os2fos5fterminate"></a>
+<a name="robo13"></a><h2>os/os_terminate [ Functions ]</h2>
+
+<p>[ <a href="#robo_top_of_doc">Top</a> ] [ <a href="#robo2">os</a> ] [ <a href="../robo_functions.html#robo_top_of_doc">Functions</a> ]</p>
+<p class="item_name">NAME</p>
+<pre>    <strong>os_terminate</strong> - exit from the executing program with an exit code
+</pre>
+<p class="item_name">SYNOPSIS</p>
+<pre>    <strong>os_terminate</strong>: procedure (status)
+</pre>
+<p class="item_name">DESCRIPTION</p>
+<pre>    Exit from the currently executing program and return the status
+    code
+</pre>
+
+</div> <!-- content -->
+<div id="footer">
+<p>Generated from ./lib/os.nfo with <a href="http://www.xs4all.nl/~rfsber/Robo/robodoc.html">ROBODoc</a> V4.99.43 on Sat Mar 30 2019 13:25:45
+</p>
+</div> <!-- footer -->
+</body>
+</html>

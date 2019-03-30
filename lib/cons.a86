@@ -7,7 +7,7 @@
 ;******
 
 
-public print_line
+public print_string, print_line, new_line
 
 extrn os_print_char:near, os_new_line:near
 extrn os_read_key:near, os_read_line:near
@@ -110,12 +110,13 @@ new_line:
 	pop	bp
 	ret
 
+
 ;****f* cons/read_key, read_line
 ;  NAME
 ;    read_key, read_line - functions to read from the console
 ;  SYNOPSIS
-;    read_key: procedure: byte
-;    read_line: procedure (length, pbuf): integer
+;    read_key: procedure byte
+;    read_line: procedure (length, pbuf) integer
 ;  DESCRIPTION
 ;    * read_key reads one character from standard input without
 ;      needing new line to be entered.
@@ -142,6 +143,7 @@ read_key:
 	pop	bp
 	ret
 
+
 ; read_line: reads a line from the console into buffer, returns the
 ;    length of the string read
 read_line:
@@ -163,4 +165,4 @@ read_line:
 	ret	4
 
 
-end.
+end

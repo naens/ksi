@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+                      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html  xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-type" content="text/html; charset=ISO-8859-1" />
+<link rel="stylesheet" href="../robodoc.css" type="text/css" />
+<title>./lib/str.a86</title>
+<!-- Source: ./lib/str.a86 -->
+<!-- Generated with ROBODoc Version 4.99.43 (Feb  2 2019) -->
+</head>
+<body>
+<div id="logo">
+<a name="robo_top_of_doc"></a>
+</div> <!-- logo -->
+<div id="navigation">
+<a class="menuitem" href="../toc_index.html#top">Table of Contents</a>
+<a class="menuitem" href="../robo_sourcefiles.html#top">Sourcefiles</a>
+<a class="menuitem" href="../masterindex.html#top">Index</a>
+<a class="menuitem" href="../robo_functions.html#top">Functions</a>
+<a class="menuitem" href="../robo_modules.html#top">Modules</a>
+<a class="menuitem" href="../robo_program.html#top">Program</a>
+</div> <!-- navigation -->
+<div id="content">
+<h3>TABLE OF CONTENTS</h3>
+<ul>
+<li>1. <a href="#robo3">ksi/str</a></li>
+<ul>
+<li>1.1. <a href="#robo14">str/string_compare</a>, <a href="#robo14">string_length</a>, <a href="#robo14">string_copy</a></li>
+</ul>
+</ul>
+<hr />
+<a name="ksi2fstr"></a>
+<a name="robo3"></a><h2>ksi/str [ Modules ]</h2>
+
+<p>[ <a href="#robo_top_of_doc">Top</a> ] [ <a href="../robo_modules.html#robo_top_of_doc">Modules</a> ]</p>
+<p class="item_name">NAME</p>
+<pre>    <strong>str</strong> - the string handling module
+</pre>
+<p class="item_name">DESCRIPTION</p>
+<pre>    This module contains functions related to the handling of the
+    strings.  It contains, for example, functions for comparison,
+    conversion, copying and other.
+</pre>
+
+<hr />
+<a name="str2fstring5fcompare"></a>
+<a name="robo14"></a><h2>str/string_compare, string_length,<br />string_copy [ Functions ]</h2>
+
+<p>[ <a href="#robo_top_of_doc">Top</a> ] [ <a href="#robo3">str</a> ] [ <a href="../robo_functions.html#robo_top_of_doc">Functions</a> ]</p>
+<p class="item_name">NAME</p>
+<pre>    <strong>string_compare</strong>, <strong>string_length</strong>, <strong>string_copy</strong> - functions for
+        string comparison, length and copying
+</pre>
+<p class="item_name">SYNOPSIS</p>
+<pre>    <strong>string_compare</strong>: procedure (pstr1, pstr2): integer
+    <strong>string_length</strong>: procedure (pstr): word
+    <strong>string_copy</strong>: procedure (psrc, pdest, n): word
+</pre>
+<p class="item_name">DESCRIPTION</p>
+<pre>    The function <strong>string_compare</strong> performs a comparison on strings and
+    returns 0 if they are equal.  Otherwise, a positive value if
+    pstr1 is greater in character codes, otherwise, returns a negative
+    value.
+    The function <strong>string_length</strong> determines the length of a
+    null-terminated string.
+    <strong>string_copy</strong> copies the string from psrc to pdest, with the limit
+    of n characters.
+</pre>
+<p class="item_name">RETURN VALUE</p>
+<pre>    <strong>string_compare</strong>: returns the result of the comparison of the two
+    strings, 0 if they are equal, a negative value if the first
+    of the two strings is before the second in ASCII ordering, and
+    a positive value otherwise.
+    <strong>string_length</strong> returns the length of the string.
+    <strong>string_copy</strong> returns the number of characters copied.
+</pre>
+
+</div> <!-- content -->
+<div id="footer">
+<p>Generated from ./lib/str.a86 with <a href="http://www.xs4all.nl/~rfsber/Robo/robodoc.html">ROBODoc</a> V4.99.43 on Sat Mar 30 2019 13:25:45
+</p>
+</div> <!-- footer -->
+</body>
+</html>

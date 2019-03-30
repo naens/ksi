@@ -1,0 +1,31 @@
+; print string test
+
+public entry
+extrn print_string:near, print_line:near, new_line:near
+extrn terminate:near
+
+		dseg
+string0		db	'test0', 0
+string1		db	'Test string', 0
+string2		db	'... 1234', 0
+
+
+		cseg
+entry:
+	mov	ax, offset string0
+	push	ax
+	call	print_string
+
+	call	new_line
+
+	mov	ax, offset string1
+	push	ax
+	call	print_string
+
+	mov	ax, offset string2
+	push	ax
+	call	print_line
+
+	mov	al, 0
+	call	terminate
+end

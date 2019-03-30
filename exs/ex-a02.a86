@@ -1,0 +1,68 @@
+;****p* exs/a02
+;  NAME
+;    a02 - print the sum of two numbers entered from console
+;  DESCRIPTION
+;    The user is asked to enter two numbers.  The program responds
+;    by printing the sum.
+;******
+
+public entry
+extrn terminate:near
+extrn print_string:near, print_integer:near, new_line:near
+extrn read_integer:near
+
+		dseg
+msg_num1	db	'Input first number: ', 0
+msg_num2	db	'Input second number: ', 0
+msg_sum		db	'Sum = ', 0
+num1		rw	1
+num2		rw	1
+sum		rw	1
+
+		cseg
+entry:
+	; print message for the first number
+	mov	ax, offset msg_num1
+	push	ax
+	call	print_string
+
+	; read the first number
+	mov	ax, offset num1
+	push	ax
+	call	read_integer
+	mov	num1, ax
+
+	; print the message for the second number
+	mov	ax, offset msg_num2
+	push	ax
+	call	print_string
+
+	; read the second number
+	mov	ax, offset num2
+	push	ax
+	call	read_integer
+	mov	ax, num2
+
+	; calculate the sum and store
+	mov	ax, num1
+	add	ax, num2
+	mov	sum, ax
+
+	; print the message for the sum
+	mov	ax, offset msg_sum
+	push	ax
+	call	print_string
+
+	; print the sum
+	push	sum
+	call	print_integer
+
+	; insert new line
+	call	new_line
+
+	; terminate the program with status 0
+	mov	al, 0
+	push	ax
+	call	terminate
+
+end.

@@ -1,0 +1,129 @@
+;****h* ksi/ccpm
+;  NAME
+;    ccpm - implementation of the OS functions for CCP/M
+;  DESCRIPTION
+;    This module implements the functions defined in os.nfo file.
+;    It can be linked with the usual DRI link86.cmd.
+;******
+
+
+public os_terminate
+public os_print_char, os_new_line
+public os_read_key, os_read_line
+
+extrn entry:near
+
+
+c_read		equ	1
+c_write		equ	2
+c_readstr	equ	10
+
+p_term		equ	143
+
+ccpm		equ	224
+
+tab		equ	9
+
+
+dgroup	group	data, stack
+cgroup	group	code
+
+stack	sseg	para
+		rw	400h
+stack_base	rw	0
+
+
+data	dseg
+	org	100h
+mem_top		rw	1
+
+
+code	cseg
+	org	0h
+	mov	cx, ds
+	mov	ss, cx
+	lea	sp, stack_base
+	mov	mem_top, sp
+	jmp	entry
+
+
+os_terminate:
+	push	bp
+	mov	bp, sp
+	mov	cl, p_term
+	mov	dl, 4[bp]
+	int	ccpm
+
+os_print_char:
+	push	bp
+	mov	bp, sp
+
+	mov	cl, c_write
+	mov	dl, 4[bp]
+	int	ccpm
+
+	pop	bp
+	ret	2
+
+os_new_line:
+	push	bp
+	mov	bp, sp
+
+	mov	cl, c_write
+	mov	dl, 0dh
+	int	ccpm
+	mov	cl, c_write
+	mov	dl, 0ah
+	int	ccpm
+
+	pop	bp
+	ret
+
+
+; read a line of length - 1 characters into pbuf
+os_read_line:
+	; parameters:
+	;	length	in 6[bp]
+	;	pbuf	in 4[bp]
+	push	bp
+	mov	bp, sp
+
+	; call c_read string with max = length - 2
+	mov	cl, c_readstr
+	mov	al, 6[bp]		; length
+	sub	al, 2
+	mov	bx, 4[bp]		; pbuf
+	mov	[bx], al		; max
+	int	ccpm
+
+	; copy the characters
+	mov	cl, 1[bx]		; nchar
+	mov	ch, 0
+	mov	si, 0
+rl_loop:
+	cmp	si, cx
+	jge	rl_loop_end
+	mov	al, 2[bx+si]
+	mov	[bx+si], al
+	inc	si
+	jmp	rl_loop
+rl_loop_end:
+	mov	byte ptr [bx+si], 0
+
+	pop	bp
+	ret	2
+
+; read a single key
+os_read_key:
+	push	bp
+	mov	bp, sp
+
+	mov	cl, c_read
+	int	ccpm
+
+	pop	bp
+	ret
+
+
+end
+

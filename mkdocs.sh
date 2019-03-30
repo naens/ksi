@@ -1,7 +1,7 @@
 #!/bin/sh
 function robodoc_html()
 {
-    robodoc --src . --doc ./docs --html --multidoc --nodesc \
+    robodoc --src . --doc ./docs --html --multidoc \
         --sections --tell --toc --index --css robodoc.css
 
     for f in docs/*.html
@@ -15,7 +15,7 @@ function robodoc_html()
 function robodoc_pdf()
 {
     mkdir -p tex
-    robodoc --src . --doc tex/ksi --latex --singledoc --nodesc \
+    robodoc --src . --doc tex/ksi --latex --singledoc \
         --sections --tell --toc --index
     cd tex
     pdflatex ksi.tex

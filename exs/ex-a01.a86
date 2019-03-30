@@ -1,0 +1,80 @@
+;****p* exs/a01
+;  NAME
+;    a01 - perfom input and output
+;  DESCRIPTION
+;    Asks the user to enter a character and a number.  And then,
+;    prints them back
+;******
+
+public entry
+extrn print_string:near, new_line:near, print_char:near
+extrn print_integer:near
+extrn read_char:near, read_integer:near
+extrn terminate:near
+
+
+		dseg
+msg_char0	db	'Enter a character: ', 0
+msg_number0	db	'Enter a number: ', 0
+msg_char1	db	'You entered character: ''', 0
+msg_number1	db	'You entered number: ''', 0
+char		rb	1
+number		rw	1
+
+
+		cseg
+entry:
+	; print msg_char0
+	mov	ax, offset msg_char0
+	push	ax
+	call	print_string
+
+	; read character
+	mov	ax, offset char
+	push	ax
+	call	read_char
+
+	; print msg_number0
+	mov	ax, offset msg_number0
+	push	ax
+	call	print_string
+
+	; read number
+	mov	ax, offset number
+	push	ax
+	call	read_integer
+
+	; print msg_char1
+	mov	ax, offset msg_char1
+	push	ax
+	call	print_string
+
+	; print char
+	mov	al, char
+	push	ax
+	call	print_char
+
+	; print quote
+	mov	al, ''''
+	push	ax
+	call	print_char
+
+	; print new line
+	call	new_line
+
+	; print msg_number1
+	mov	ax, offset msg_number1
+	push	ax
+	call	print_string
+
+	; print number
+	push	number
+	call	print_integer
+
+	; print new line
+	call	new_line
+
+	; terminate with code 0
+	mov	al, 0
+	call	terminate
+end.
