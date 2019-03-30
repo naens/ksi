@@ -1,0 +1,25 @@
+About tests
+===========
+
+Tests will be stored in user area number 1.  There are several
+groups of tests, each dealing with a particular module or a group
+of functions of the module.  For example, in the module cons,
+groups might be read functions, print functions, and so on.  Each
+one of the groups has a 3 letters abbreviation, which is a part
+of the file name.  The file name also has the number of the test
+within a group, which is a 2-digit decimal number.
+
+The format of the test file name is t-ggg-nn, where ggg is the
+identifier of the group and nn is the number of the test.
+
+Here are the groups in use:
+
+| Group ID | Group description             |
+|----------+-------------------------------|
+|    cpc   | Console print character       |
+|    cps   | Console print string          |
+|    cpn   | Console print number          |
+|    crk   | Console read key              |
+|    crl   | Console read line             |
+|    crn   | Console read number           |
+|----------+-------------------------------|

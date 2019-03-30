@@ -1,0 +1,52 @@
+; test print hexadecimal numbers
+
+public entry
+extrn print_hex_word:near, print_hex_byte:near, new_line:near
+extrn terminate:near
+
+		cseg
+entry:
+	mov	ax, 1234h
+	push	ax
+	call	print_hex_word
+	call	new_line
+
+	mov	ax, 0ah
+	push	ax
+	call	print_hex_word
+	call	new_line
+
+	mov	ax, 12bch
+	push	ax
+	call	print_hex_word
+	call	new_line
+
+	mov	ax, 0fe07h
+	push	ax
+	call	print_hex_word
+	call	new_line
+
+	mov	al, 0
+	push	ax
+	call	print_hex_byte
+	call	new_line
+
+	mov	al, 40h
+	push	ax
+	call	print_hex_byte
+	call	new_line
+
+	mov	al, 0eh
+	push	ax
+	call	print_hex_byte
+	call	new_line
+
+	mov	al, 0f7h
+	push	ax
+	call	print_hex_byte
+	call	new_line
+
+	mov	al, 0
+	call	terminate
+
+end

@@ -1,0 +1,26 @@
+; print character test
+
+public entry
+
+extrn print_char:near, new_line:near, terminate:near
+
+		cseg
+entry:
+	mov	al, '1'
+	push	ax
+	call	print_char
+
+	mov	al, 'Z'
+	push	ax
+	call	print_char
+
+	mov	al, '$'
+	push	ax
+	call	print_char
+
+	call	new_line
+
+	mov	al, 0
+	call	terminate
+
+end

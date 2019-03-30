@@ -7,7 +7,8 @@
 ;******
 
 
-public print_string, print_line, new_line
+public print_char, print_string, print_line, new_line
+public print_hex_byte, print_hex_word, print_integer
 
 extrn os_print_char:near, os_new_line:near
 extrn os_read_key:near, os_read_line:near
@@ -109,6 +110,92 @@ new_line:
 
 	pop	bp
 	ret
+
+
+;****f* cons/print_hex_byte, print_hex_word, print_integer
+;  NAME
+;    print_hex_byte, print_hex_word, print_integer - print a number
+;  SYNOPSIS
+;    print_hex_byte: procedure (b)
+;    print_hex_word: procedure (w)
+;    print_integer: procedure (num)
+;  DESCRIPTION
+;    These functions print the number given as argument to the console.
+;    The _hex_ functions print an unsigned number as hexadecimal with
+;    leading zeros if needed.
+;    The width of the number printed by print_hex_byte is 2 characters,
+;    and print_hex_word prints the number using 4 characters.
+;    The function print_integer prints a signed decimal number,
+;    prefixed with a minus sign if it's negative, and it does not
+;    print leading zeros.
+;  RETURN VALUE
+;    These functions do not return any value.
+;******
+
+prnibble:
+	; parameters:
+	;	nibble	in 4[bp]
+	push	bp
+	mov	bp, sp
+
+	mov	al, 4[bp]		; nibble
+	add	al, '0'
+	cmp	al, 10 + '0'
+	jb	pn_num
+	add	al, 'a' - '0' - 10
+pn_num:
+	push	ax
+	call	os_print_char
+
+	pop	bp
+	ret	2
+
+print_hex_byte:
+	; parameters:
+	;	byte	in 4[bp]
+	push	bp
+	mov	bp, sp
+
+	; print higher nibble
+	mov	al, 4[bp]		; byte
+	mov	cl, 4
+	shr	al, cl
+	push	ax
+	call	prnibble
+
+	; print lower nibble
+	mov	al, 4[bp]		; byte
+	and	al, 0fh
+	push	ax
+	call	prnibble
+
+	pop	bp
+	ret	2
+
+
+print_hex_word:
+	; parameters:
+	;	word	in 4[bp]
+	push	bp
+	mov	bp, sp
+
+	; print higher byte of the word
+	mov	ax, 4[bp]		; word
+	mov	al, ah
+	push	ax
+	call	print_hex_byte
+
+	; print lower byte of the word
+	mov	ax, 4[bp]		; word
+	push	ax
+	call	print_hex_byte
+
+	pop	bp
+	ret	2
+
+
+print_integer:
+
 
 
 ;****f* cons/read_key, read_line
