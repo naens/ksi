@@ -1,0 +1,37 @@
+; print a decimal number test
+
+public entry
+
+extrn print_integer:near, new_line:near, terminate:near
+
+		cseg
+entry:
+	mov	ax, 0
+	push	ax
+	call	print_integer
+	call	new_line
+
+	mov	ax, 15
+	push	ax
+	call	print_integer
+	call	new_line
+
+	mov	ax, 30292
+	push	ax
+	call	print_integer
+	call	new_line
+
+	mov	ax, -123
+	push	ax
+	call	print_integer
+	call	new_line
+
+	mov	ax, -23456
+	push	ax
+	call	print_integer
+	call	new_line
+
+	mov	al, 0
+	call	terminate
+
+end

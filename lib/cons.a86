@@ -194,7 +194,71 @@ print_hex_word:
 	ret	2
 
 
+; print:integer: print a signed integer to the console
+		dseg
+pi_index	rw	1
+pi_array	rb	5
+
+		cseg
 print_integer:
+	; parameters:
+	;	number	in 4[bp]
+	push	bp
+	mov	bp, sp
+
+	mov	ax, 4[bp]		; pi_number
+
+	; check if the number is zero
+	cmp	ax, 0
+	jne	pi_not_zero
+
+	; print '0' and return
+	mov	al, '0'
+	push	ax
+	call	os_print_char
+	jmp	pi_end
+pi_not_zero:
+
+	; check if negative
+	jge	pi_positive
+	neg	ax
+	push	ax
+	mov	al, '-'
+	push	ax
+	call	os_print_char
+	pop	ax
+pi_positive:
+
+	; store the digits in the array
+	mov	si, 0
+	mov	bx, offset pi_array
+	mov	cx, 10
+pi_store_loop:
+	cmp	ax, 0
+	je	pi_store_loop_end
+	mov	dx, 0
+	div	cx
+	mov	[bx+si], dl
+	inc	si
+	jmp	pi_store_loop
+pi_store_loop_end:
+
+	; print the digits
+pi_print_loop:
+	dec	si
+	mov	pi_index, si
+	mov	bx, offset pi_array
+	mov	al, [bx+si]
+	add	al, '0'
+	push	ax
+	call	os_print_char
+	mov	si, pi_index
+	cmp	si, 0
+	jne	pi_print_loop
+
+pi_end:
+	pop	bp
+	ret	2
 
 
 
