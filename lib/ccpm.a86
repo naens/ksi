@@ -123,8 +123,11 @@ rl_loop:
 	jmp	rl_loop
 rl_loop_end:
 	mov	byte ptr [bx+si], 0
+	push	cx
 
 	call	os_new_line
+
+	pop	ax
 
 	pop	bp
 	ret	4
