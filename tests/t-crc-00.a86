@@ -1,0 +1,47 @@
+; test for the read key function
+
+public entry
+extrn print_char:near, print_string:near, new_line:near
+extrn print_hex_byte:near
+extrn read_key:near
+extrn terminate:near
+
+
+		dseg
+key		rb	1
+prompt		db	'Enter a key: ', 0
+msg_char	db	'The char entered is: ', 0
+msg_hex		db	'Hexadecimal code is: ', 0
+
+		cseg
+entry:
+	mov	ax, offset prompt
+	push	ax
+	call	print_string
+
+	call	read_key
+	mov	key, al
+	call	new_line
+
+	mov	ax, offset msg_char
+	push	ax
+	call	print_string
+
+	mov	al, key
+	push	ax
+	call	print_char
+	call	new_line
+
+	mov	ax, offset msg_hex
+	push	ax
+	call	print_string
+
+	mov	al, key
+	push	ax
+	call	print_hex_byte
+	call	new_line
+
+	mov	al, 0
+	call	terminate
+
+end

@@ -94,9 +94,11 @@ os_read_line:
 	sub	al, 2
 	mov	bx, 4[bp]		; pbuf
 	mov	[bx], al		; max
+	mov	dx, bx
 	int	ccpm
 
 	; copy the characters
+	mov	bx, 4[bp]		; pbuf
 	mov	cl, 1[bx]		; nchar
 	mov	ch, 0
 	mov	si, 0
@@ -110,8 +112,10 @@ rl_loop:
 rl_loop_end:
 	mov	byte ptr [bx+si], 0
 
+	call	os_new_line
+
 	pop	bp
-	ret	2
+	ret	4
 
 ; read a single key
 os_read_key:

@@ -9,6 +9,7 @@
 
 public print_char, print_string, print_line, new_line
 public print_hex_byte, print_hex_word, print_integer
+public read_key, read_line
 
 extrn os_print_char:near, os_new_line:near
 extrn os_read_key:near, os_read_line:near
