@@ -80,6 +80,18 @@ os_new_line:
 	ret
 
 
+; read a single key
+os_read_key:
+	push	bp
+	mov	bp, sp
+
+	mov	cl, c_read
+	int	ccpm
+
+	pop	bp
+	ret
+
+
 ; read a line of length - 1 characters into pbuf
 os_read_line:
 	; parameters:
@@ -117,17 +129,5 @@ rl_loop_end:
 	pop	bp
 	ret	4
 
-; read a single key
-os_read_key:
-	push	bp
-	mov	bp, sp
-
-	mov	cl, c_read
-	int	ccpm
-
-	pop	bp
-	ret
-
 
 end
-

@@ -1,0 +1,133 @@
+;****h* ksi/dos
+;  NAME
+;    dos - the dos module, implementation of the os functions for PC-DOS 3.30
+;  DESCRIPTION
+;    This module implements the Operating System part of the library for
+;    PC-DOS.  The library is made to be Operating System independent, so
+;    the parts that need to interact with the OS are isolated in the special
+;    modules, one for each OS.  And this particular module is for PC-DOS 3.30.
+;******
+
+
+public os_terminate
+public os_print_char, os_new_line
+public os_read_key, os_read_line
+
+extrn entry:near
+
+conin		equ	01h
+conout		equ	02h
+readln		equ	0ah
+
+dosexit		equ	4ch
+
+dos		equ	21h
+
+
+dgroup	group	data, stack
+cgroup	group	code
+
+
+stack	sseg	word
+		rw	1024
+stack_base	equ	offset $+2048
+
+
+data	dseg
+
+code	cseg
+	mov	cx, ds
+	mov	ss, cx
+	mov	ax, stack_base
+	mov	sp, ax
+
+	jmp	entry
+
+
+os_terminate:
+	push	bp
+	mov	bp, sp
+
+	mov	ah, dosexit
+	mov	al, 4[bp]
+	int	dos
+
+os_print_char:
+	push	bp
+	mov	bp, sp
+
+	mov	ah, conout
+	mov	dl, 4[bp]
+	int	dos
+
+	pop	bp
+	ret	2
+
+os_new_line:
+	push	bp
+	mov	bp, sp
+
+	mov	ah, conout
+	mov	dl, 0dh
+	int	dos
+	mov	cl, conout
+	mov	dl, 0ah
+	int	dos
+
+	pop	bp
+	ret
+
+
+os_read_key:
+	push	bp
+	mov	bp, sp
+
+	mov	ah, conin
+	int	dos
+
+	pop	bp
+	ret
+
+
+os_read_line:
+	; parameters:
+	;	length	in 6[bp]
+	;	pbuf	in 4[bp]
+	push	bp
+	mov	bp, sp
+
+	; read line from console
+	mov	ah, readln
+	mov	al, 6[bp]			; length
+	sub	al, 2
+	mov	bx, 4[bp]			; pbuf
+	mov	[bx], al
+	mov	dx, bx
+	int	dos
+
+	; copy the characters
+	mov	bx, 4[bp]			; pbuf
+	mov	cl, 1[bx]
+	mov	ch, 0
+	mov	si, 0
+rl_loop:
+	cmp	si, cx
+	jge	rl_loop_end
+	mov	al, 2[bx+si]
+	mov	[bx+si], al
+	inc	si
+	jmp	rl_loop
+rl_loop_end:
+	mov	byte ptr [bx+si], 0
+
+	push	cx
+
+	call	os_new_line
+
+	; return the number of bytes read
+	pop	ax
+
+	pop	bp
+	ret	4
+
+end

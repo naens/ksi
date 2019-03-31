@@ -40,3 +40,28 @@
 #  DESCRIPTION
 #    This function causes the cursor to go to the new line.
 #******
+
+#****f* os/os_read_key
+#  NAME
+#    os_read_key - read key from the console
+#  SYNOPSIS
+#    os_read_key: procedure byte
+#  DESCRIPTION
+#    Reads the key from the console and returns it.
+#  RETURN VALUE
+#    The function returns the key pressed after the function has been called.
+#******
+
+#****f* os/os_read_line
+#  NAME
+#    os_read_line - read one line form the console into a buffer
+#  SYNOPSIS
+#    os_read_line: procedure (length, pbuffer): integer
+#  DESCRIPTION
+#    The function reads an entire line from the console and puts it into the
+#    buffer.  The length indicates the maximum length to read (without the
+#    trailing null character.  No more than length bytes will be written into
+#    the buffer.
+#  RETURN VALUE
+#    The return value is the number of bytes read without the null-terminator.
+#******
