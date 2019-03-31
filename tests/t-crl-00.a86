@@ -1,7 +1,9 @@
 ; read line test
 
 public entry
-extrn read_line:near, print_string:near, print_line:near
+extrn print_string:near, print_line:near, new_line:near
+extrn print_integer:near
+extrn read_line:near
 extrn terminate:near
 
 bufsz		equ	20
@@ -9,7 +11,9 @@ bufsz		equ	20
 		dseg
 prompt		db	'Enter a string: ', 0
 message		db	'You entered: ', 0
+msg_len		db	'The length is: ', 0
 buffer		rb	bufsz
+len		rw	1
 
 		cseg
 entry:
@@ -22,6 +26,7 @@ entry:
 	mov	ax, offset buffer
 	push	ax
 	call	read_line
+	mov	len, ax
 
 	mov	ax, offset message
 	push	ax
@@ -30,6 +35,14 @@ entry:
 	mov	ax, offset buffer
 	push	ax
 	call	print_line
+
+	mov	ax, offset msg_len
+	push	ax
+	call	print_string
+
+	push	len
+	call	print_integer
+	call	new_line
 
 	mov	al, 0
 	call	terminate
