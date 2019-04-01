@@ -6,8 +6,8 @@
 <meta http-equiv="Content-Style-Type" content="text/css" />
 <meta http-equiv="Content-type" content="text/html; charset=ISO-8859-1" />
 <link rel="stylesheet" href="../robodoc.css" type="text/css" />
-<title>./lib/sys.a86</title>
-<!-- Source: ./lib/sys.a86 -->
+<title>./lib/dos.a86</title>
+<!-- Source: ./lib/dos.a86 -->
 <!-- Generated with ROBODoc Version 4.99.43 (Feb  2 2019) -->
 </head>
 <body>
@@ -25,32 +25,26 @@
 <div id="content">
 <h3>TABLE OF CONTENTS</h3>
 <ul>
-<li>1. <a href="#robo5">ksi/sys</a></li>
+<li>1. <a href="#robo2">ksi/dos</a></li>
 </ul>
 <hr />
-<a name="ksi2fsys"></a>
-<a name="robo5"></a><h2>ksi/sys [ Modules ]</h2>
+<a name="ksi2fdos"></a>
+<a name="robo2"></a><h2>ksi/dos [ Modules ]</h2>
 
 <p>[ <a href="#robo_top_of_doc">Top</a> ] [ <a href="../robo_modules.html#robo_top_of_doc">Modules</a> ]</p>
 <p class="item_name">NAME</p>
-<pre>    <strong>sys</strong> - module that provides operating system functions
-</pre>
-<p class="item_name">SYNOPSIS</p>
-<pre>    get_args: procedure (pargc, pargv)
-    execute: procedure (pcmd)
-    terminate: procedure (code)
+<pre>    <strong>dos</strong> - the <strong>dos</strong> module, implementation of the <a href="./os_nfo.html#robo3">os</a> functions for PC-DOS 3.30
 </pre>
 <p class="item_name">DESCRIPTION</p>
-<pre>    The function of the module <strong>sys</strong> is to provide functions that are
-    typically provided by the Operating System.  These include
-    get_args, a function that returns the command line arguments,
-    execute, to execute a program, and terminate, a function that
-    terminates the executing program.
+<pre>    This module implements the Operating System part of the library for
+    PC-DOS.  The library is made to be Operating System independent, so
+    the parts that need to interact with the OS are isolated in the special
+    modules, one for each OS.  And this particular module is for PC-DOS 3.30.
 </pre>
 
 </div> <!-- content -->
 <div id="footer">
-<p>Generated from ./lib/sys.a86 with <a href="http://www.xs4all.nl/~rfsber/Robo/robodoc.html">ROBODoc</a> V4.99.43 on Mon Apr 01 2019 11:04:48
+<p>Generated from ./lib/dos.a86 with <a href="http://www.xs4all.nl/~rfsber/Robo/robodoc.html">ROBODoc</a> V4.99.43 on Mon Apr 01 2019 11:04:48
 </p>
 </div> <!-- footer -->
 </body>

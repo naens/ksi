@@ -27,8 +27,9 @@
 <ul>
 <li>1. <a href="#robo1">ksi/cons</a></li>
 <ul>
-<li>1.1. <a href="#robo5">cons/print_char</a>, <a href="#robo5">print_string</a>, <a href="#robo5">print_line</a>, <a href="#robo5">new_line</a></li>
-<li>1.2. <a href="#robo6">cons/read_key</a>, <a href="#robo6">read_line</a></li>
+<li>1.1. <a href="#robo6">cons/print_char</a>, <a href="#robo6">print_string</a>, <a href="#robo6">print_line</a>, <a href="#robo6">new_line</a></li>
+<li>1.2. <a href="#robo7">cons/print_hex_byte</a>, <a href="#robo7">print_hex_word</a>, <a href="#robo7">print_integer</a></li>
+<li>1.3. <a href="#robo8">cons/read_key</a>, <a href="#robo8">read_line</a></li>
 </ul>
 </ul>
 <hr />
@@ -46,7 +47,7 @@
 
 <hr />
 <a name="cons2fprint5fchar"></a>
-<a name="robo5"></a><h2>cons/print_char, print_string,<br />print_line, new_line [ Functions ]</h2>
+<a name="robo6"></a><h2>cons/print_char, print_string,<br />print_line, new_line [ Functions ]</h2>
 
 <p>[ <a href="#robo_top_of_doc">Top</a> ] [ <a href="#robo1">cons</a> ] [ <a href="../robo_functions.html#robo_top_of_doc">Functions</a> ]</p>
 <p class="item_name">NAME</p>
@@ -74,8 +75,35 @@
 </pre>
 
 <hr />
+<a name="cons2fprint5fhex5fbyte"></a>
+<a name="robo7"></a><h2>cons/print_hex_byte, print_hex_word,<br />print_integer [ Functions ]</h2>
+
+<p>[ <a href="#robo_top_of_doc">Top</a> ] [ <a href="#robo1">cons</a> ] [ <a href="../robo_functions.html#robo_top_of_doc">Functions</a> ]</p>
+<p class="item_name">NAME</p>
+<pre>    <strong>print_hex_byte</strong>, <strong>print_hex_word</strong>, <strong>print_integer</strong> - print a number
+</pre>
+<p class="item_name">SYNOPSIS</p>
+<pre>    <strong>print_hex_byte</strong>: procedure (b)
+    <strong>print_hex_word</strong>: procedure (w)
+    <strong>print_integer</strong>: procedure (num)
+</pre>
+<p class="item_name">DESCRIPTION</p>
+<pre>    These functions print the number given as argument to the console.
+    The _hex_ functions print an unsigned number as hexadecimal with
+    leading zeros if needed.
+    The width of the number printed by <strong>print_hex_byte</strong> is 2 characters,
+    and <strong>print_hex_word</strong> prints the number using 4 characters.
+    The function <strong>print_integer</strong> prints a signed decimal number,
+    prefixed with a minus sign if it's negative, and it does not
+    print leading zeros.
+</pre>
+<p class="item_name">RETURN VALUE</p>
+<pre>    These functions do not return any value.
+</pre>
+
+<hr />
 <a name="cons2fread5fkey"></a>
-<a name="robo6"></a><h2>cons/read_key, read_line [ Functions ]</h2>
+<a name="robo8"></a><h2>cons/read_key, read_line [ Functions ]</h2>
 
 <p>[ <a href="#robo_top_of_doc">Top</a> ] [ <a href="#robo1">cons</a> ] [ <a href="../robo_functions.html#robo_top_of_doc">Functions</a> ]</p>
 <p class="item_name">NAME</p>
@@ -103,7 +131,7 @@
 
 </div> <!-- content -->
 <div id="footer">
-<p>Generated from ./lib/cons.a86 with <a href="http://www.xs4all.nl/~rfsber/Robo/robodoc.html">ROBODoc</a> V4.99.43 on Sat Mar 30 2019 13:25:45
+<p>Generated from ./lib/cons.a86 with <a href="http://www.xs4all.nl/~rfsber/Robo/robodoc.html">ROBODoc</a> V4.99.43 on Mon Apr 01 2019 11:04:48
 </p>
 </div> <!-- footer -->
 </body>

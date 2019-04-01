@@ -6,8 +6,8 @@
 <meta http-equiv="Content-Style-Type" content="text/css" />
 <meta http-equiv="Content-type" content="text/html; charset=ISO-8859-1" />
 <link rel="stylesheet" href="../robodoc.css" type="text/css" />
-<title>./lib/sys.a86</title>
-<!-- Source: ./lib/sys.a86 -->
+<title>./plm/plmhw.plm</title>
+<!-- Source: ./plm/plmhw.plm -->
 <!-- Generated with ROBODoc Version 4.99.43 (Feb  2 2019) -->
 </head>
 <body>
@@ -25,32 +25,28 @@
 <div id="content">
 <h3>TABLE OF CONTENTS</h3>
 <ul>
-<li>1. <a href="#robo5">ksi/sys</a></li>
+<li>1. <a href="#robo12">ksi/plmhw</a></li>
 </ul>
 <hr />
-<a name="ksi2fsys"></a>
-<a name="robo5"></a><h2>ksi/sys [ Modules ]</h2>
+<a name="ksi2fplmhw"></a>
+<a name="robo12"></a><h2>ksi/plmhw [ Program ]</h2>
 
-<p>[ <a href="#robo_top_of_doc">Top</a> ] [ <a href="../robo_modules.html#robo_top_of_doc">Modules</a> ]</p>
+<p>[ <a href="#robo_top_of_doc">Top</a> ] [ <a href="../robo_program.html#robo_top_of_doc">Program</a> ]</p>
 <p class="item_name">NAME</p>
-<pre>    <strong>sys</strong> - module that provides operating system functions
-</pre>
-<p class="item_name">SYNOPSIS</p>
-<pre>    get_args: procedure (pargc, pargv)
-    execute: procedure (pcmd)
-    terminate: procedure (code)
+<pre>    <strong>plmhw</strong> - A program that displays "Hello!" on the console.
 </pre>
 <p class="item_name">DESCRIPTION</p>
-<pre>    The function of the module <strong>sys</strong> is to provide functions that are
-    typically provided by the Operating System.  These include
-    get_args, a function that returns the command line arguments,
-    execute, to execute a program, and terminate, a function that
-    terminates the executing program.
+<pre>    This is a program written in the PL/M programming language in order to
+    demonstrate how the Assembly language library can be used from PL/M.
+    This program calls two procedures: <a href="../lib/cons_a86.html#robo6">print_line</a> and terminate.  It
+    terminates with the status code 0.   In order to be usable from the
+    assembly code, this program contains the entry label that is called
+    after the initialization.
 </pre>
 
 </div> <!-- content -->
 <div id="footer">
-<p>Generated from ./lib/sys.a86 with <a href="http://www.xs4all.nl/~rfsber/Robo/robodoc.html">ROBODoc</a> V4.99.43 on Mon Apr 01 2019 11:04:48
+<p>Generated from ./plm/plmhw.plm with <a href="http://www.xs4all.nl/~rfsber/Robo/robodoc.html">ROBODoc</a> V4.99.43 on Mon Apr 01 2019 11:04:48
 </p>
 </div> <!-- footer -->
 </body>
