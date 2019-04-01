@@ -1,0 +1,56 @@
+; test parsing of decimal signed integers
+
+public entry
+extrn print_integer:near, new_line:near
+extrn parse_integer:near
+extrn terminate:near
+
+		dseg
+istr0		db	'0', 0
+istr1		db	'123', 0
+istr2		db	'-2134', 0
+istr3		db	'3er', 0
+num		rw	1
+
+		cseg
+entry:
+	mov	ax, offset istr0
+	push	ax
+	mov	ax, offset num
+	push	ax
+	call	parse_integer
+	push	num
+	call	print_integer
+	call	new_line
+
+	mov	ax, offset istr1
+	push	ax
+	mov	ax, offset num
+	push	ax
+	call	parse_integer
+	push	num
+	call	print_integer
+	call	new_line
+
+	mov	ax, offset istr2
+	push	ax
+	mov	ax, offset num
+	push	ax
+	call	parse_integer
+	push	num
+	call	print_integer
+	call	new_line
+
+	mov	ax, offset istr3
+	push	ax
+	mov	ax, offset num
+	push	ax
+	call	parse_integer
+	push	num
+	call	print_integer
+	call	new_line
+
+	mov	al, 0
+	call	terminate
+
+end

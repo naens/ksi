@@ -7,6 +7,10 @@
 ;    conversion, copying and other.
 ;******
 
+
+public string_compare, string_length, string_copy
+public parse_hex, parse_integer, to_hex_string, to_integer_string
+
 ;****f* str/string_compare, string_length, string_copy
 ;  NAME
 ;    string_compare, string_length, string_copy - functions for
@@ -100,3 +104,110 @@ scpy_loop_end:
 	pop	bp
 	ret	6
 
+
+;****f* str/parse_hex, parse_integer
+;  NAME
+;    parse_hex, parse_integer - parse strings, convert to numbers
+;  SYNOPSIS
+;    parse_hex: procedure (pstr, pnum)
+;    parse_integer: procedure (pstr, pnum)
+;  DESCRIPTION
+;    The parse functions parse hexadecimal and decimal strings and
+;    put the result in pnum.  The parse_hex function parses an
+;    unsigned hexadecimal number, and the parse_integer parses a
+;    isgned decimal number.
+;  RETURN VALUE
+;    These functions do not return any value.
+;******
+
+; parse_hex: parse an unsigned hexadecimal string into a word
+parse_hex:
+	; parameters
+	;	pstr	in 6[bp]
+	;	pnum	in 4[bp]
+	push	bp
+	mov	bp, sp
+
+	mov	cl, 4			; shift amount
+	mov	dx, 0			; the result
+	mov	si, 6[bp]		; pstr
+	mov	ah, 0
+ph_loop:
+	mov	al, [si]
+	cmp	al, 0			; test end of string
+	je	ph_loop_end
+	cmp	al, '0'			; test digit
+	jb	ph_loop_letter
+	cmp	al, '9'
+	ja	ph_loop_letter
+	sub	al, '0'
+	jmp	ph_loop_label
+ph_loop_letter:
+	or	al, 20h			; convert to lowercase
+	cmp	al, 'a'			; test letter
+	jb	ph_loop_end
+	cmp	al, 'f'
+	ja	ph_loop_end
+	sub	al, 'a' - 10
+ph_loop_label:
+	shl	dx, cl
+	add	dx, ax
+	inc	si
+	jmp	ph_loop
+ph_loop_end:
+
+	mov	bx, 4[bp]
+	mov	[bx], dx
+	pop	bp
+	ret	4
+
+parse_integer:
+	; parameters:
+	;	pstr	in 6[bp]
+	;	pnum	in 4[bp]
+	push	bp
+	mov	bp, sp
+
+	; skip '-'
+	mov	si, 6[bp]
+	cmp	byte ptr [si], '-'
+	jne	pi_positive
+	inc	si
+pi_positive:
+
+	; loop
+	mov	ax, 0			; the result value
+	mov	cx, 10			; multiplier
+	mov	bh, 0			; use bx for bl
+pi_loop:
+	mov	bl, [si]
+	cmp	bl, '0'
+	jb	pi_loop_end
+	cmp	bl, '9'
+	ja	pi_loop_end
+	sub	bl, '0'
+	mul	cx
+	add	ax, bx
+	inc	si
+	jmp	pi_loop
+pi_loop_end:
+
+	; negate if needed
+	mov	si, 6[bp]
+	cmp	byte ptr [si], '-'
+	jne	pi_end
+	neg	ax
+
+pi_end:
+	mov	bx, 4[bp]
+	mov	[bx], ax
+
+	pop	bp
+	ret	4
+
+
+to_hex_string:
+
+to_integer_string:
+
+end

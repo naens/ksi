@@ -1,0 +1,66 @@
+; parse hexadecimal test
+
+public entry
+extrn print_string:near, new_line:near, print_hex_word:near
+extrn parse_hex:near
+extrn terminate:near
+
+		dseg
+num		rw	1
+hex_str0	db	'0', 0
+hex_str1	db	'15', 0
+hex_str2	db	'a7', 0
+hex_str3	db	'12f', 0
+hex_str4	db	'fda8', 0
+
+		cseg
+entry:
+	mov	ax, offset hex_str0
+	push	ax
+	mov	ax, offset num
+	push	ax
+	call	parse_hex
+	push	num
+	call	print_hex_word
+	call	new_line
+
+	mov	ax, offset hex_str1
+	push	ax
+	mov	ax, offset num
+	push	ax
+	call	parse_hex
+	push	num
+	call	print_hex_word
+	call	new_line
+
+	mov	ax, offset hex_str2
+	push	ax
+	mov	ax, offset num
+	push	ax
+	call	parse_hex
+	push	num
+	call	print_hex_word
+	call	new_line
+
+	mov	ax, offset hex_str3
+	push	ax
+	mov	ax, offset num
+	push	ax
+	call	parse_hex
+	push	num
+	call	print_hex_word
+	call	new_line
+
+	mov	ax, offset hex_str4
+	push	ax
+	mov	ax, offset num
+	push	ax
+	call	parse_hex
+	push	num
+	call	print_hex_word
+	call	new_line
+
+	mov	al, 0
+	call	terminate
+
+end
