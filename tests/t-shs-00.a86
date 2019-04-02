@@ -1,0 +1,61 @@
+; Convert number to hexadecimal string test
+
+public entry
+extrn print_line:near
+extrn to_hex_string:near
+extrn terminate:near
+
+		dseg
+buf		rb	5
+
+		cseg
+entry:
+	mov	ax, 0
+	push	ax
+	mov	ax, offset buf
+	push	ax
+	call	to_hex_string
+	mov	ax, offset buf
+	push	ax
+	call	print_line
+
+	mov	ax, 0ah
+	push	ax
+	mov	ax, offset buf
+	push	ax
+	call	to_hex_string
+	mov	ax, offset buf
+	push	ax
+	call	print_line
+
+	mov	ax, 0abch
+	push	ax
+	mov	ax, offset buf
+	push	ax
+	call	to_hex_string
+	mov	ax, offset buf
+	push	ax
+	call	print_line
+
+	mov	ax, 7bcah
+	push	ax
+	mov	ax, offset buf
+	push	ax
+	call	to_hex_string
+	mov	ax, offset buf
+	push	ax
+	call	print_line
+
+	mov	ax, 0efb0h
+	push	ax
+	mov	ax, offset buf
+	push	ax
+	call	to_hex_string
+	mov	ax, offset buf
+	push	ax
+	call	print_line
+
+	mov	al, 0
+	call	terminate
+
+end

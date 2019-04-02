@@ -206,7 +206,72 @@ pi_end:
 	ret	4
 
 
+;****f* str/to_hex_string, to_integer_string
+;  NAME
+;    to_hex_string, to_integer_string - convert number to string
+;  SYNOPSIS
+;    to_hex_string: procedure (num, pbuf)
+;    to_integer_string: procedure (num, pbuf)
+;  DESCRIPTION
+;    These functions covert a number num to a string that is stored
+;    in pbuf.  It is assumed that pbuf is big enough to contain
+;    the string representation of the number.
+;    The function to_hex_string writes the number as a hexadecimal
+;    string with lowercase letters, the number is read as unsigned,
+;    whereas the function to_integer_string writes a signed decimal
+;    number into the buffer, including the minus sign for negative
+;    numbers.
+;  RETURN VALUE
+;    These function do not return any value.
+;******
+
 to_hex_string:
+	; parameters:
+	;	num	in 6[bp]
+	;	pbuf	in 4[bp]
+	push	bp
+	mov	bp, sp
+
+	; first loop: get characters in reverse order, write to buffer
+	mov	ax, 6[bp]		; num in ax
+	mov	bx, 4[bp]		; pbuf in bx
+	mov	di, 0
+	mov	cl, 4			; amount for right-shifting
+ths_loop_chars:
+	mov	dx, ax
+	and	dl, 0fh
+	cmp	dl, 10
+	jb	ths_loop_chars_num
+	add	dl, 'a' - '0' - 10
+ths_loop_chars_num:
+	add	dl, '0'
+	mov	[bx + di], dl
+	shr	ax, cl
+	inc	di
+	cmp	ax, 0
+	ja	ths_loop_chars
+ths_loop_chars_end:
+
+	; set the null terminating byte
+	mov	byte ptr [bx+di], 0
+
+	; second loop: reverse the string, put in the correct order
+	mov	si, 0
+	dec	di			; start from length - 1
+ths_loop_reverse:
+	cmp	si, di
+	jge	ths_loop_reverse_end
+	mov	al, [bx+si]
+	mov	ah, [bx+di]
+	mov	[bx+di], al
+	mov	[bx+si], ah
+	inc	si
+	dec	di
+	jmp	ths_loop_reverse
+ths_loop_reverse_end:
+
+	pop	bp
+	ret	4
 
 to_integer_string:
 
