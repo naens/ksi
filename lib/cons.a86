@@ -13,6 +13,7 @@ public read_key, read_line
 
 extrn os_print_char:near, os_new_line:near
 extrn os_read_key:near, os_read_line:near
+extrn to_integer_string:near
 
 
 ;****f* cons/print_char, print_string, print_line, new_line
@@ -197,8 +198,7 @@ print_hex_word:
 
 ; print:integer: print a signed integer to the console
 		dseg
-pi_index	rw	1
-pi_array	rb	5
+pi_buf	rb	7
 
 		cseg
 print_integer:
@@ -208,59 +208,17 @@ print_integer:
 	mov	bp, sp
 
 	mov	ax, 4[bp]		; pi_number
-
-	; check if the number is zero
-	cmp	ax, 0
-	jne	pi_not_zero
-
-	; print '0' and return
-	mov	al, '0'
 	push	ax
-	call	os_print_char
-	jmp	pi_end
-pi_not_zero:
-
-	; check if negative
-	jge	pi_positive
-	neg	ax
+	mov	ax, offset pi_buf
 	push	ax
-	mov	al, '-'
+	call	to_integer_string
+
+	mov	ax, offset pi_buf
 	push	ax
-	call	os_print_char
-	pop	ax
-pi_positive:
+	call	print_string
 
-	; store the digits in the array
-	mov	si, 0
-	mov	bx, offset pi_array
-	mov	cx, 10
-pi_store_loop:
-	cmp	ax, 0
-	je	pi_store_loop_end
-	mov	dx, 0
-	div	cx
-	mov	[bx+si], dl
-	inc	si
-	jmp	pi_store_loop
-pi_store_loop_end:
-
-	; print the digits
-pi_print_loop:
-	dec	si
-	mov	pi_index, si
-	mov	bx, offset pi_array
-	mov	al, [bx+si]
-	add	al, '0'
-	push	ax
-	call	os_print_char
-	mov	si, pi_index
-	cmp	si, 0
-	jne	pi_print_loop
-
-pi_end:
 	pop	bp
 	ret	2
-
 
 
 ;****f* cons/read_key, read_line
