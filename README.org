@@ -1,14 +1,17 @@
 #+TITLE: The Ksi Project
 
 * Description
-This is the Ksi project, the purpose of which is to create a library for CCP/M and PC-DOS,
-and to write some application in the Assembly language that use the library.
+This is the Ksi project, the purpose of which is to create a library
+for CCP/M and PC-DOS, and to write some application in the Assembly
+language that use the library.
 
-The motivation to make this project is to learn to code in Assembly, which I think is an
-important skill.  Another thing, is to learn to write programs with a good structure and
-an organization that makes sense.  Very often I get lost in my own programs so that even
-me, I cannot maintain it anymore.  This project is aimed to rectify this defect.
+The motivation to make this project is to learn to code in Assembly,
+which I think is an important skill.  Another thing, is to learn to
+write programs with a good structure and an organization that makes
+sense.  Very often I get lost in my own programs so that even me, I
+cannot maintain it anymore.  This project is aimed to rectify this
+defect.
 
 * Documentation
-The documentation generated from the ROBODoc comments is located in the Github Pages
-at [[https://naens.github.io/ksi/][https://naens.github.io/ksi/]].
+The documentation generated from the ROBODoc comments is located in
+the Github Pages at [[https://naens.github.io/ksi/][https://naens.github.io/ksi/]].
