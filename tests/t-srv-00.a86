@@ -1,0 +1,40 @@
+; reverse a string
+
+public entry
+extrn print_line:near
+extrn string_reverse:near
+extrn terminate:near
+
+		dseg
+str0		db	'abcde', 0
+str1		db	'Q', 0
+str2		db	0
+
+
+		cseg
+entry:
+	mov	ax, offset str0
+	push	ax
+	call	string_reverse
+	mov	ax, offset str0
+	push	ax
+	call	print_line
+
+	mov	ax, offset str1
+	push	ax
+	call	string_reverse
+	mov	ax, offset str1
+	push	ax
+	call	print_line
+
+	mov	ax, offset str2
+	push	ax
+	call	string_reverse
+	mov	ax, offset str2
+	push	ax
+	call	print_line
+
+	mov	al, 0
+	call	terminate
+
+end

@@ -8,7 +8,7 @@
 ;******
 
 
-public string_compare, string_length, string_copy
+public string_compare, string_length, string_copy, string_reverse
 public parse_hex, parse_integer, to_hex_string, to_integer_string
 
 ;****f* str/string_compare, string_length, string_copy
@@ -19,6 +19,7 @@ public parse_hex, parse_integer, to_hex_string, to_integer_string
 ;    string_compare: procedure (pstr1, pstr2): integer
 ;    string_length: procedure (pstr): word
 ;    string_copy: procedure (psrc, pdest, n): word
+;    string_reverse: procedure (pstr)
 ;  DESCRIPTION
 ;    The function string_compare performs a comparison on strings and
 ;    returns 0 if they are equal.  Otherwise, a positive value if
@@ -28,6 +29,7 @@ public parse_hex, parse_integer, to_hex_string, to_integer_string
 ;    null-terminated string.
 ;    string_copy copies the string from psrc to pdest, with the limit
 ;    of n characters.
+;    The function string_reverse reverses a string in place.
 ;  RETURN VALUE
 ;    string_compare: returns the result of the comparison of the two
 ;    strings, 0 if they are equal, a negative value if the first
@@ -35,6 +37,7 @@ public parse_hex, parse_integer, to_hex_string, to_integer_string
 ;    a positive value otherwise.
 ;    string_length returns the length of the string.
 ;    string_copy returns the number of characters copied.
+;    The function string_reverse does not return any value.
 ;******
 
 
@@ -103,6 +106,41 @@ scpy_loop_end:
 	sub	ax, cx
 	pop	bp
 	ret	6
+
+string_reverse:
+	; parameters:
+	;	pstr	in 4[bp]
+	push	bp
+	mov	bp, sp
+
+	mov	bx, 4[bp]			; pstr
+
+	; first loop: calculate the length
+	mov	si, 0
+sr_loop_length:
+	cmp	byte ptr [bx+si], 0
+	je	sr_loop_length_end
+	inc	si
+	jmp	sr_loop_length
+sr_loop_length_end:
+
+	; second loop: reverse the string
+	mov	di, 0
+	dec	si
+sr_loop_reverse:
+	cmp	di, si
+	jge	sr_loop_reverse_end
+	mov	al, [bx+si]
+	mov	cl, [bx+di]
+	mov	[bx+si], cl
+	mov	[bx+di], al
+	inc	di
+	dec	si
+	jmp	sr_loop_reverse
+sr_loop_reverse_end:
+
+	pop	bp
+	ret	2
 
 
 ;****f* str/parse_hex, parse_integer
@@ -232,47 +270,74 @@ to_hex_string:
 	push	bp
 	mov	bp, sp
 
-	; first loop: get characters in reverse order, write to buffer
+	; loop: get characters in reverse order, write to buffer
 	mov	ax, 6[bp]		; num in ax
 	mov	bx, 4[bp]		; pbuf in bx
 	mov	di, 0
 	mov	cl, 4			; amount for right-shifting
-ths_loop_chars:
+ths_loop:
 	mov	dx, ax
 	and	dl, 0fh
 	cmp	dl, 10
-	jb	ths_loop_chars_num
+	jb	ths_loop_num
 	add	dl, 'a' - '0' - 10
-ths_loop_chars_num:
+ths_loop_num:
 	add	dl, '0'
 	mov	[bx + di], dl
 	shr	ax, cl
 	inc	di
 	cmp	ax, 0
-	ja	ths_loop_chars
-ths_loop_chars_end:
+	ja	ths_loop
+ths_loop_end:
 
 	; set the null terminating byte
 	mov	byte ptr [bx+di], 0
 
-	; second loop: reverse the string, put in the correct order
-	mov	si, 0
-	dec	di			; start from length - 1
-ths_loop_reverse:
-	cmp	si, di
-	jge	ths_loop_reverse_end
-	mov	al, [bx+si]
-	mov	ah, [bx+di]
-	mov	[bx+di], al
-	mov	[bx+si], ah
-	inc	si
-	dec	di
-	jmp	ths_loop_reverse
-ths_loop_reverse_end:
+	push	bx
+	call	string_reverse
 
 	pop	bp
 	ret	4
 
+
 to_integer_string:
+	; parameters
+	;	num	in 6[bp]
+	;	pbuf	in 4[bp]
+	push	bp
+	mov	bp, sp
+
+	mov	ax, 6[bp]			; num
+	mov	bx, 4[bp]			; pbuf
+	cmp	ax, 0
+	jge	tis_positive
+	mov	byte ptr [bx], '-'
+	inc	bx	; from this point bx corresponds to the numeric part
+	neg	ax	; of the number
+
+tis_positive:
+	; loop
+	mov	di, 0
+	mov	cx, 10
+tis_loop:
+	mov	dx, 0
+	div	cx
+	add	dl, '0'
+	mov	[bx+di], dl
+	inc	di
+	cmp	ax, 0
+	jg	tis_loop
+tis_loop_end:
+
+	; put a null at the end of the string
+	mov	byte ptr [bx+di], 0
+
+	; reverse the string
+	push	bx
+	call	string_reverse
+
+	pop	bp
+	ret	4
+
 
 end

@@ -1,0 +1,64 @@
+; test decimal string conversion
+
+public entry
+extrn print_line:near
+extrn to_integer_string:near
+extrn terminate:near
+
+		dseg
+buf		rb	7
+
+		cseg
+entry:
+	mov	ax, 0
+	push	ax
+	mov	ax, offset buf
+	push	ax
+	call	to_integer_string
+	mov	ax, offset buf
+	push	ax
+	call	print_line
+
+	mov	ax, 12ah		; 298
+	push	ax
+	mov	ax, offset buf
+	push	ax
+	call	to_integer_string
+	mov	ax, offset buf
+	push	ax
+	call	print_line
+
+	mov	ax, 7aefh		; 31471
+	push	ax
+	mov	ax, offset buf
+	push	ax
+	call	to_integer_string
+	mov	ax, offset buf
+	push	ax
+	call	print_line
+
+	mov	ax, 0fff9h		; -7
+	push	ax
+	mov	ax, offset buf
+	push	ax
+	call	to_integer_string
+	mov	ax, offset buf
+	push	ax
+	call	print_line
+
+	mov	ax, 0b4b2h		; -19278
+	push	ax
+	mov	ax, offset buf
+	push	ax
+	call	to_integer_string
+	mov	ax, offset buf
+	push	ax
+	call	print_line
+
+	mov	al, 0
+	call	terminate
+
+end
+
+
+
