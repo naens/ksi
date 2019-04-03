@@ -2,3 +2,6 @@
 docs/* linguist-documentation
 robodoc.css linguist-documentation
 *.a86 eol=crlf
+*.nfo eol=crlf
+*.txt eol=crlf
+*.plm eol=crlf
