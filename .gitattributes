@@ -5,3 +5,4 @@ robodoc.css linguist-documentation
 *.nfo eol=crlf
 *.txt eol=crlf
 *.plm eol=crlf
+*.bat eol=crlf
