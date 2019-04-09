@@ -50,8 +50,11 @@ string_compare:
 
 scmp_loop:
 	mov	al, [si]
-	sub	al, [di]
+	mov	bl, [di]
+	sub	al, bl
 	jne	scmp_loop_end
+	cmp	bl, 0
+	je	scmp_loop_end
 	inc	si
 	inc	di
 	jmp	scmp_loop
