@@ -22,6 +22,9 @@ Here are the groups in use:
 |    crk   | Console read key              |
 |    crl   | Console read line             |
 |    crn   | Console read number           |
+|    scm   | String compare                |
+|    sln   | String length                 |
+|    scp   | Stirng copy                   |
 |    srv   | String reverse                |
 |    sph   | String parse hexadecimal      |
 |    spi   | String parse integer          |

@@ -1,0 +1,71 @@
+; compare two strnigs
+
+public entry
+extrn print_string:near, print_line:near
+extrn read_line:near
+extrn string_compare:near
+extrn terminate:near
+
+		dseg
+string_length	equ	72
+string0		rb	string_length
+string1		rb	string_length
+msg_in_0	db	'Enter the first string: ', 0
+msg_in_1	db	'Enter the second string: ', 0
+msg_lower	db	'The first string is smaller', 0
+msg_equal	db	'The strings are equal', 0
+msg_greater	db	'The first string is bigger', 0
+
+		cseg
+entry:
+	; print msg_in_0
+	mov	ax, offset msg_in_0
+	push	ax
+	call	print_string
+
+	; read the first stirng
+	mov	ax, string_length
+	push	ax
+	mov	ax, offset string0
+	push	ax
+	call	read_line
+
+	; print msg_in_1
+	mov	ax, offset msg_in_1
+	push	ax
+	call	print_string
+
+	; read the second stirng
+	mov	ax, string_length
+	push	ax
+	mov	ax, offset string1
+	push	ax
+	call	read_line
+
+	; compare stirng0 and string1
+	mov	ax, offset string0
+	push	ax
+	mov	ax, offset string1
+	push	ax
+	call	string_compare
+
+	cmp	al, 0
+	jg	greater
+	je	equal
+	mov	ax, offset msg_lower
+	push	ax
+	jmp	print
+greater:
+	mov	ax, offset msg_greater
+	push	ax
+	jmp	print
+equal:
+	mov	ax, offset msg_equal
+	push	ax
+print:
+	call	print_line
+
+	mov	al, 0
+	call	terminate
+
+end
