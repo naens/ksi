@@ -1,0 +1,52 @@
+; test the length of strings
+
+public entry
+extrn string_length:near
+extrn print_string:near, print_integer:near, new_line:near
+extrn read_line:near
+extrn terminate:near
+
+		dseg
+max_len		equ	72
+string		rb	max_len
+msg_in		db	'Please enter a string: ', 0
+msg_len		db	'The length of the string is ', 0
+len		rw	1
+
+		cseg
+entry:
+	; print msg_in
+	mov	ax, offset msg_in
+	push	ax
+	call	print_string
+
+	; read the string
+	mov	ax, max_len
+	push	ax
+	mov	ax, offset string
+	push	ax
+	call	read_line
+
+	; get the length of the string
+	mov	ax, offset string
+	push	ax
+	call	string_length
+	mov	len, ax
+
+	; print msg_len
+	mov	ax, offset msg_len
+	push	ax
+	call	print_string
+
+	; print the length of the string
+	push	len
+	call	print_integer
+
+	; print a new line
+	call	new_line
+
+	; exit
+	mov	al, 0
+	call	terminate
+
+end
