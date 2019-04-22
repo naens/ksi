@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="../robodoc.css" type="text/css" />
 <title>./lib/str.a86</title>
 <!-- Source: ./lib/str.a86 -->
-<!-- Generated with ROBODoc Version 4.99.43 (Feb  2 2019) -->
+<!-- Generated with ROBODoc Version 4.99.43 (Apr 22 2019) -->
 </head>
 <body>
 <div id="logo">
@@ -27,8 +27,9 @@
 <ul>
 <li>1. <a href="#robo4">ksi/str</a></li>
 <ul>
-<li>1.1. <a href="#robo16">str/parse_hex</a>, <a href="#robo16">parse_integer</a></li>
-<li>1.2. <a href="#robo17">str/string_compare</a>, <a href="#robo17">string_length</a>, <a href="#robo17">string_copy</a></li>
+<li>1.1. <a href="#robo19">str/parse_hex</a>, <a href="#robo19">parse_integer</a></li>
+<li>1.2. <a href="#robo20">str/string_compare</a>, <a href="#robo20">string_length</a>, <a href="#robo20">string_copy</a></li>
+<li>1.3. <a href="#robo21">str/to_hex_string</a>, <a href="#robo21">to_integer_string</a></li>
 </ul>
 </ul>
 <hr />
@@ -47,7 +48,7 @@
 
 <hr />
 <a name="str2fparse5fhex"></a>
-<a name="robo16"></a><h2>str/parse_hex, parse_integer [ Functions ]</h2>
+<a name="robo19"></a><h2>str/parse_hex, parse_integer [ Functions ]</h2>
 
 <p>[ <a href="#robo_top_of_doc">Top</a> ] [ <a href="#robo4">str</a> ] [ <a href="../robo_functions.html#robo_top_of_doc">Functions</a> ]</p>
 <p class="item_name">NAME</p>
@@ -69,7 +70,7 @@
 
 <hr />
 <a name="str2fstring5fcompare"></a>
-<a name="robo17"></a><h2>str/string_compare, string_length,<br />string_copy [ Functions ]</h2>
+<a name="robo20"></a><h2>str/string_compare, string_length,<br />string_copy [ Functions ]</h2>
 
 <p>[ <a href="#robo_top_of_doc">Top</a> ] [ <a href="#robo4">str</a> ] [ <a href="../robo_functions.html#robo_top_of_doc">Functions</a> ]</p>
 <p class="item_name">NAME</p>
@@ -79,7 +80,8 @@
 <p class="item_name">SYNOPSIS</p>
 <pre>    <strong>string_compare</strong>: procedure (pstr1, pstr2): integer
     <strong>string_length</strong>: procedure (pstr): word
-    <strong>string_copy</strong>: procedure (psrc, pdest, n): word
+    <strong>string_copy</strong>: procedure (psrc, dest_len, pdest): word
+    string_reverse: procedure (pstr)
 </pre>
 <p class="item_name">DESCRIPTION</p>
 <pre>    The function <strong>string_compare</strong> performs a comparison on strings and
@@ -89,7 +91,8 @@
     The function <strong>string_length</strong> determines the length of a
     null-terminated string.
     <strong>string_copy</strong> copies the string from psrc to pdest, with the limit
-    of n characters.
+    of dest_len characters.
+    The function string_reverse reverses a string in place.
 </pre>
 <p class="item_name">RETURN VALUE</p>
 <pre>    <strong>string_compare</strong>: returns the result of the comparison of the two
@@ -98,11 +101,38 @@
     a positive value otherwise.
     <strong>string_length</strong> returns the length of the string.
     <strong>string_copy</strong> returns the number of characters copied.
+    The function string_reverse does not return any value.
+</pre>
+
+<hr />
+<a name="str2fto5fhex5fstring"></a>
+<a name="robo21"></a><h2>str/to_hex_string, to_integer_string [ Functions ]</h2>
+
+<p>[ <a href="#robo_top_of_doc">Top</a> ] [ <a href="#robo4">str</a> ] [ <a href="../robo_functions.html#robo_top_of_doc">Functions</a> ]</p>
+<p class="item_name">NAME</p>
+<pre>    <strong>to_hex_string</strong>, <strong>to_integer_string</strong> - convert number to string
+</pre>
+<p class="item_name">SYNOPSIS</p>
+<pre>    <strong>to_hex_string</strong>: procedure (num, pbuf)
+    <strong>to_integer_string</strong>: procedure (num, pbuf)
+</pre>
+<p class="item_name">DESCRIPTION</p>
+<pre>    These functions covert a number num to a string that is stored
+    in pbuf.  It is assumed that pbuf is big enough to contain
+    the string representation of the number.
+    The function <strong>to_hex_string</strong> writes the number as a hexadecimal
+    string with lowercase letters, the number is read as unsigned,
+    whereas the function <strong>to_integer_string</strong> writes a signed decimal
+    number into the buffer, including the minus sign for negative
+    numbers.
+</pre>
+<p class="item_name">RETURN VALUE</p>
+<pre>    These function do not return any value.
 </pre>
 
 </div> <!-- content -->
 <div id="footer">
-<p>Generated from ./lib/str.a86 with <a href="http://www.xs4all.nl/~rfsber/Robo/robodoc.html">ROBODoc</a> V4.99.43 on Mon Apr 01 2019 11:04:48
+<p>Generated from ./lib/str.a86 with <a href="http://www.xs4all.nl/~rfsber/Robo/robodoc.html">ROBODoc</a> V4.99.43 on Mon Apr 22 2019 16:00:08
 </p>
 </div> <!-- footer -->
 </body>
