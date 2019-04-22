@@ -21,7 +21,6 @@ msg_number1	db	'You entered number: ', 0
 char		rb	1
 number		rw	1
 
-
 		cseg
 entry:
 	; print msg_char0
@@ -37,7 +36,6 @@ entry:
 
 	; print new line
 	call	new_line
-
 
 	; print msg_number0
 	mov	ax, offset msg_number0
@@ -82,4 +80,4 @@ entry:
 	; terminate with code 0
 	mov	al, 0
 	call	terminate
-end.
+end
