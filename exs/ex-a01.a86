@@ -9,7 +9,7 @@
 public entry
 extrn print_string:near, new_line:near, print_char:near
 extrn print_integer:near
-extrn read_char:near, read_integer:near
+extrn read_key:near, read_integer:near
 extrn terminate:near
 
 
@@ -17,7 +17,7 @@ extrn terminate:near
 msg_char0	db	'Enter a character: ', 0
 msg_number0	db	'Enter a number: ', 0
 msg_char1	db	'You entered character: ''', 0
-msg_number1	db	'You entered number: ''', 0
+msg_number1	db	'You entered number: ', 0
 char		rb	1
 number		rw	1
 
@@ -32,7 +32,12 @@ entry:
 	; read character
 	mov	ax, offset char
 	push	ax
-	call	read_char
+	call	read_key
+	mov	char, al
+
+	; print new line
+	call	new_line
+
 
 	; print msg_number0
 	mov	ax, offset msg_number0

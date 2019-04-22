@@ -65,4 +65,4 @@ entry:
 	push	ax
 	call	terminate
 
-end.
+end
