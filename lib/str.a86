@@ -102,6 +102,7 @@ scpy_loop_lbl:
 	mov	[di], al
 	inc	si
 	inc	di
+	dec	cx
 	jmp	scpy_loop
 scpy_loop_end:
 

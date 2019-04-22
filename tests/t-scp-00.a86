@@ -1,0 +1,76 @@
+; test the string copy function
+
+public entry
+extrn string_copy:near
+extrn print_string:near, print_line:near, new_line:near
+extrn print_integer:near
+extrn terminate:near
+
+
+		dseg
+str0		db	'abc', 0
+str1		db	'x', 0
+str2		db	0
+msg_len		db	'length: ', 0
+bufsz		equ	8
+buf		rs	bufsz
+
+		cseg
+string_test:
+	; parameters:
+	;	string	in 4[bp]
+	; local variables:
+	;	str_len	in -2[bp]
+	push	bp
+	mov	bp, sp
+	sub	sp, 2
+
+	; copy the string pointed by 4[bp] into buf
+	mov	ax, 4[bp]		; str
+	push	ax
+	mov	ax, offset buf
+	push	ax
+	mov	ax, bufsz
+	push	ax
+	call	string_copy
+	mov	-2[bp], ax		; str_len
+
+	; print copy in buffer
+	mov	ax, offset buf
+	push	ax
+	call	print_line
+
+	; print the length message, msg_len
+	mov	ax, offset msg_len
+	push	ax
+	call	print_string
+
+	; print the length
+	mov	ax, -2[bp]
+	push	ax
+	call	print_integer
+
+	; print new line
+	call	new_line
+
+	add	sp, 2
+	pop	bp
+	ret	2
+
+
+entry:
+	mov	ax, offset str0
+	push	ax
+	call	string_test
+
+	mov	ax, offset str1
+	push	ax
+	call	string_test
+
+	mov	ax, offset str2
+	push	ax
+	call	string_test
+
+	mov	al, 0
+	call	terminate
+end

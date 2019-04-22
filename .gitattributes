@@ -6,3 +6,4 @@ robodoc.css linguist-documentation
 *.txt eol=crlf
 *.plm eol=crlf
 *.bat eol=crlf
+core.safecrlf=false
