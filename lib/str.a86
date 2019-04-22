@@ -18,7 +18,7 @@ public parse_hex, parse_integer, to_hex_string, to_integer_string
 ;  SYNOPSIS
 ;    string_compare: procedure (pstr1, pstr2): integer
 ;    string_length: procedure (pstr): word
-;    string_copy: procedure (psrc, pdest, n): word
+;    string_copy: procedure (psrc, dest_len, pdest): word
 ;    string_reverse: procedure (pstr)
 ;  DESCRIPTION
 ;    The function string_compare performs a comparison on strings and
@@ -28,7 +28,7 @@ public parse_hex, parse_integer, to_hex_string, to_integer_string
 ;    The function string_length determines the length of a
 ;    null-terminated string.
 ;    string_copy copies the string from psrc to pdest, with the limit
-;    of n characters.
+;    of dest_len characters.
 ;    The function string_reverse reverses a string in place.
 ;  RETURN VALUE
 ;    string_compare: returns the result of the comparison of the two
@@ -80,15 +80,15 @@ sl_loop_end:
 
 string_copy:
 	; parameters:
-	;	psrc	in 8[bp]
-	;	pdest	in 6[bp]
-	;	n	in 4[bp]
+	;	psrc	 in 8[bp]
+	;	dest_len in 6[bp]
+	;	pdest	 in 4[bp]
 	push	bp
 	mov	bp, sp
 
 	mov	si, 8[bp]		; psrc
-	mov	di, 6[bp]		; pdest
-	mov	cx, 4[bp]		; n
+	mov	cx, 6[bp]		; dest_len
+	mov	di, 4[bp]		; pdest
 
 scpy_loop:
 	cmp	cx, 0
@@ -106,10 +106,11 @@ scpy_loop_lbl:
 	jmp	scpy_loop
 scpy_loop_end:
 
-	mov	ax, 4[bp]		; n
+	mov	ax, 6[bp]			; dest_len
 	sub	ax, cx
 	pop	bp
 	ret	6
+
 
 string_reverse:
 	; parameters:

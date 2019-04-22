@@ -28,9 +28,9 @@ string_test:
 	; copy the string pointed by 4[bp] into buf
 	mov	ax, 4[bp]		; str
 	push	ax
-	mov	ax, offset buf
-	push	ax
 	mov	ax, bufsz
+	push	ax
+	mov	ax, offset buf
 	push	ax
 	call	string_copy
 	mov	-2[bp], ax		; str_len
