@@ -10,10 +10,11 @@
 public print_char, print_string, print_line, new_line
 public print_hex_byte, print_hex_word, print_integer
 public read_key, read_line
+public read_hex, read_integer
 
 extrn os_print_char:near, os_new_line:near
 extrn os_read_key:near, os_read_line:near
-extrn to_integer_string:near
+extrn parse_hex:near, parse_integer:near, to_integer_string:near
 
 
 ;****f* cons/print_char, print_string, print_line, new_line
@@ -273,6 +274,92 @@ read_line:
 
 	pop	bp
 	ret	4
+
+
+;****f* cons/read_hex, read_integer
+;  NAME
+;    read_hex, read_integer - read a number from the console
+;  SYNOPSIS
+;    read_hex: procedure (pnum)
+;    read_integer: procedure (pnum)
+;  DESCRIPTION
+;    These two function read a hexadecimal or a decimal number from
+;    the console respectively and store it in the location pointed
+;    by the pnum parameter.
+;  RETURN VALUE
+;    These function do not return any value.
+;******
+
+
+; read_hex: read a number from the console into pnum
+		dseg
+rh_bufsz	equ	14
+rh_buf		rs	rh_bufsz
+rh_num		rw	1
+
+		cseg
+read_hex:
+	; parameters:
+	;	pnum	in 4[bp]
+	push	bp
+	mov	bp, sp
+
+	; read one line into rh_buf
+	mov	ax, rh_bufsz
+	push	ax
+	mov	ax, offset rh_buf
+	push	ax
+	call	read_line
+
+	; parse the hexadecimal string, convert to integer
+	mov	ax, offset rh_buf
+	push	ax
+	mov	ax, offset rh_num
+	push	ax
+	call	parse_hex
+
+	; store the number read in the location given by pnum
+	mov	bx, 4[bp]		; pnum
+	mov	ax, rh_num
+	mov	[bx], ax
+
+	pop	bp
+	ret	2
+
+; read_integer: read an integer number from the console and store it
+		dseg
+ri_bufsz	equ	15
+ri_buf		rs	ri_bufsz
+ri_num		rw	1
+
+		cseg
+read_integer:
+	; parameters:
+	;	pnum	in 4[bp]
+	push	bp
+	mov	bp, sp
+
+	; read a string of max size ri_bufsz into ri_buf
+	mov	ax, ri_bufsz
+	push	ax
+	mov	ax, offset ri_buf
+	push	ax
+	call	read_line
+
+	; convert the string in ri_buf into a number, store in ri_num
+	mov	ax, offset ri_buf
+	push	ax
+	mov	ax, offset ri_num
+	push	ax
+	call	parse_integer
+
+	; write the number to the location pointed by 4[bp]
+	mov	bx, 4[bp]		; pnum
+	mov	ax, ri_num
+	mov	[bx], ax
+
+	pop	bp
+	ret	2
 
 
 end

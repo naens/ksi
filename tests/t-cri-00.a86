@@ -1,0 +1,42 @@
+; test to test the reading of an integer
+
+public entry
+extrn print_string:near, print_integer:near, new_line:near
+extrn read_integer:near
+extrn terminate:near
+
+
+		dseg
+msg_in		db	'Please enter a signed integer: ', 0
+msg_out		db	'The number is: ', 0
+num		rw	1
+
+		cseg
+entry:
+	; print msg_in
+	mov	ax, offset msg_in
+	push	ax
+	call	print_string
+
+	; read num
+	mov	ax, offset num
+	push	ax
+	call	read_integer
+
+	; print msg_out
+	mov	ax, offset msg_out
+	push	ax
+	call	print_string
+
+	; print num
+	push	num
+	call	print_integer
+
+	; print new line
+	call	new_line
+
+	; terminate the application
+	mov	al, 0
+	call	terminate
+
+end

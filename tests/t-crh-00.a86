@@ -1,0 +1,42 @@
+; read a hexadecimal number test (read it and print it back)
+
+public entry
+extrn print_string:near, print_hex_word:near, new_line:near
+extrn read_hex:near
+extrn terminate:near
+
+
+		dseg
+msg_in		db	'Please enter a hexadeximal number: ', 0
+msg_out		db	'The number is ', 0
+num		rw	1
+
+		cseg
+entry:
+	; print msg_in
+	mov	ax, offset msg_in
+	push	ax
+	call	print_string
+
+	; read the hexadecimal number
+	mov	ax, offset num
+	push	ax
+	call	read_hex
+
+	; print msg_out
+	mov	ax, offset msg_out
+	push	ax
+	call	print_string
+
+	; print the hexadecimal number
+	push	num
+	call	print_hex_word
+
+	; print a new line
+	call	new_line
+
+	; exit
+	mov	ax, 0
+	call	terminate
+
+end

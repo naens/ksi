@@ -21,7 +21,8 @@ Here are the groups in use:
 |    cpn   | Console print number          |
 |    crk   | Console read key              |
 |    crl   | Console read line             |
-|    crn   | Console read number           |
+|    crh   | Console read hexadecimal      |
+|    cri   | Console read integer          |
 |    scm   | String compare                |
 |    sln   | String length                 |
 |    scp   | Stirng copy                   |
