@@ -1,0 +1,13 @@
+hello:
+do;
+
+$include(c:\intel\lib\doslibs.inc)
+
+  declare cr literally '13';
+  declare lf literally '10';
+
+  call dos_std_string_out(@('Hello', cr, lf, 24h));
+
+  call dos_exit(0);
+
+end;
