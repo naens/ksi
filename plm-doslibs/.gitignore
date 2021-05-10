@@ -1,0 +1,12 @@
+*.86
+*.lst
+*.LST
+*.mp1
+*.MP1
+*.BAK
+*.bak
+*.obj
+*.OBJ
+*.EXE
+DOSLIBS.*
+doslibs.*
