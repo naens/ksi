@@ -8,5 +8,6 @@
 *.obj
 *.OBJ
 *.EXE
+*.exe
 DOSLIBS.*
 doslibs.*
