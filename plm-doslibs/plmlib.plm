@@ -1,0 +1,41 @@
+$include(c:\intel\lib\doslibs.inc)
+
+declare CR literally '13';
+declare LF literally '10';
+declare EOL literally '24h';
+
+print_char: procedure(chr);
+    declare chr byte;
+    call dos_std_out(chr);
+end print_char;
+
+print_string: procedure(pstr);
+    declare pstr pointer;
+    declare str based pstr (*) byte;
+    declare buf(256) byte;
+    declare i byte;
+    i = 0;
+    do while str(i) <> 0;
+        buf(i + 2) = str(i);
+        i = i + 1;
+    end;
+    buf(0) = i;
+    buf(i + 2) = EOL;
+    call dos_std_string_out(@buf);
+end print_string;
+
+new_line: procedure;
+    call dos_std_string_out(@(CR, LF, EOL));
+end new_line;
+
+print_line: procedure(pstr);
+    declare pstr pointer;
+    call print_string(pstr);
+    call new_line;
+end print_line;
+
+terminate: procedure(code);
+    declare code word;
+    call dos_exit(code);
+end terminate;
+
