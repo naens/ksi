@@ -1,0 +1,4 @@
+terminate: procedure(code);
+    declare code word;
+    call dos_exit(code);
+end terminate;
