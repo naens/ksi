@@ -1,24 +1,11 @@
 subleq:
 do;
-$include(c:\intel\lib\doslibs.inc)
+$include(..\plmlib.inc)
 
-    declare CR literally '13';
-    declare LF literally '10';
-    declare EOL literally '24h';
-
-    read$line: procedure pointer;
-        declare buf(80) byte;
-        buf(0) = length(buf) - 1;
-        call dos_buffered_std_in(@buf);
-        buf(buf(1) + 2) = EOL;
-        call dos_std_string_out(@(CR, LF, EOL));
-        return @buf(2);
-    end read$line;
-
-    declare str pointer;
-    call dos_std_string_out(@('Input String is: ', EOL));
-    str = read$line;
-    call dos_std_string_out(str);
-    call dos_std_string_out(@(CR, LF, EOL));
-    call dos_exit(0);
+    declare str (80) byte;
+    call print_string(@('Input String is: ', 0));
+    if read_line(length(str), @str) > 0 then
+        call print_line(@str);
+    call terminate(0);
 end;
+
