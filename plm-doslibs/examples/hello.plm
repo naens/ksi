@@ -1,13 +1,9 @@
 hello:
 do;
 
-$include(c:\intel\lib\doslibs.inc)
+$include(..\plmlib.inc)
 
-  declare cr literally '13';
-  declare lf literally '10';
-
-  call dos_std_string_out(@('Hello', cr, lf, 24h));
-
-  call dos_exit(0);
+  call print_line(@('Hello', 0));
+  call terminate(0);
 
 end;
