@@ -2,10 +2,20 @@ subleq:
 do;
 $include(..\plmlib.inc)
 
-    declare str (80) byte;
-    call print_string(@('Input String is: ', 0));
-    if read_line(length(str), @str) > 0 then
-        call print_line(@str);
+    declare continue boolean;
+    declare command (80) byte;
+
+    continue = true;
+    do while continue;
+        call print_string(@('SUBLEQ>', EOL));
+        if read_line(length(command), @command) <> 0 then
+        do;
+            if string_compare(@command, @('quit', 0)) = 0 then
+                continue = false;
+            else
+                call print_line(@command);
+        end;
+    end;
     call terminate(0);
 end;
-
+
