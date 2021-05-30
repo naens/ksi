@@ -2,11 +2,13 @@ subleq:
 do;
 $include(..\plmlib.inc)
 
-    declare max$buf$len literally '80';
+    declare max$buf$len literally '25';
+    declare command$len literally '80';
 
     declare continue boolean;
-    declare command (max$buf$len) byte;
-    declare index byte;
+    declare buf (max$buf$len) byte;
+    declare command (command$len) byte;
+    declare index uint;
 
     /*
      * insert_mode: procedure;
@@ -21,26 +23,39 @@ $include(..\plmlib.inc)
     insert_mode: procedure;
         declare i byte;
         declare j byte;
-        declare c byte;
+        declare b byte;  /* input number */
+        declare c byte;  /* current character */
+        declare is$number boolean;
+
         do while read_line(length(command), @command) <> 0;
             i = 0;
             j = 0;
-            do while (c := command(i)) <> 0;
-                if c = ' ' then
+            is$number = false;
+            do while true;
+                if c = ' ' or c = 0 then
+                    if is$number then
+                    do;
+                        is$number = false;
+                        command(i) = 0;
+                        call print_string(@('found: ', 0));
+                        call print_line(@command(j));
+                        b = low(parse_hex(@command(j)));
+                        buf(index) = b;
+                        index = index + 1;
+                        if index > max$buf$len then
+                            goto loop$end;
+                    end;
+                else if not is$number then
                 do;
-                    command(i) = 0;
-                    call print_string(@('found: ', 0));
-                    call print_string(@command(j));
-                    call new_line;
-                    j = i + 1;
+                    is$number = true;
+                    j = i;   /* new number, save first index */
                 end;
+                if c = 0 then
+                    goto loop$end;
                 i = i + 1;
             end;
-            command(i) = 0;
-            call print_string(@('found: ', 0));
-            call print_string(@command(j));
-            call new_line;
         end;
+loop$end:
     end insert_mode;
 
     index = 0;
@@ -59,4 +74,4 @@ $include(..\plmlib.inc)
     end;
     call terminate(0);
 end;
-
+
