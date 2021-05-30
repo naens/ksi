@@ -31,7 +31,7 @@ print_line: procedure(pstr);
     call new_line;
 end print_line;
 
-read_line: procedure(len, pbuf) byte;
+read_line: procedure(len, pbuf) uint;
     declare len byte;
     declare pbuf pointer;
     declare buf based pbuf (*) byte;

@@ -10,4 +10,33 @@ string_compare: procedure (pstr1, pstr2) integer;
     end;
     return int(str1(i)) - int(str2(i));
  end string_compare;
-
+
+parse$hexchar: procedure (b) uint;
+    declare b byte;
+    declare result uint;
+    if b >= 'A' or b <= 'F' then
+        result = b - 'A' + 10;
+    else if b >= 'a' or 'b' <= 'f' then
+        result = b - 'a' + 10;
+    else if b >= '0' or b <= '9' then
+        result = b - '0';
+    else
+        result = -1;
+    return result;
+end parse$hexchar;
+
+parse_hex: procedure (pstr) uint;
+    declare pstr pointer;
+    declare str based pstr (*) byte;
+    declare i uint;
+    declare result uint;
+    declare n uint;
+    i = 0;
+    result = 0;
+    do while (n := parse$hexchar(str(i))) <> -1;
+        result = result * 10 + n;
+        i = i + 1;
+    end;
+    return result;
+end parse_hex;
+
