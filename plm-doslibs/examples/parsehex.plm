@@ -1,0 +1,15 @@
+parsehex:
+do;
+
+$include (c:\prog\plm\plmlib.inc)
+
+declare n uint;
+
+n = parse_hex(81h);
+call print_num(n);
+call new_line;
+
+call terminate(0);
+
+end;
+
