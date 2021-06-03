@@ -1,3 +1,5 @@
+$if not str$lib
+$set (str$lib)
 string_compare: procedure (pstr1, pstr2) integer;
     declare pstr1 pointer;
     declare pstr2 pointer;
@@ -11,15 +13,15 @@ string_compare: procedure (pstr1, pstr2) integer;
     return int(str1(i)) - int(str2(i));
  end string_compare;
 
-parse$hexchar: procedure (b) uint;
+parse$hexchar: procedure (b) integer;
     declare b byte;
-    declare result uint;
-    if b >= 'A' or b <= 'F' then
-        result = b - 'A' + 10;
-    else if b >= 'a' or 'b' <= 'f' then
-        result = b - 'a' + 10;
-    else if b >= '0' or b <= '9' then
-        result = b - '0';
+    declare result integer;
+    if b >= 'A' and b <= 'F' then
+        result = int(b - 'A' + 10);
+    else if b >= 'a' and 'b' <= 'f' then
+        result = int(b - 'a' + 10);
+    else if b >= '0' and b <= '9' then
+        result = int(b - '0');
     else
         result = -1;
     return result;
@@ -30,13 +32,14 @@ parse_hex: procedure (pstr) uint;
     declare str based pstr (*) byte;
     declare i uint;
     declare result uint;
-    declare n uint;
+    declare n integer;
     i = 0;
     result = 0;
     do while (n := parse$hexchar(str(i))) <> -1;
-        result = result * 10 + n;
+        result = result * 16 + unsign(n);
         i = i + 1;
     end;
     return result;
 end parse_hex;
-
+
+$endif
