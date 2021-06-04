@@ -2,76 +2,94 @@ subleq:
 do;
 $include(..\plmlib.inc)
 
-    declare max$buf$len literally '25';
-    declare command$len literally '80';
+declare max$buf$len literally '25';
+declare command$len literally '80';
 
-    declare continue boolean;
-    declare buf (max$buf$len) byte;
-    declare command (command$len) byte;
-    declare index uint;
+declare continue boolean;
+declare buf (max$buf$len) byte;
+declare buf$len uint;
+declare command (command$len) byte;
+declare index uint;
 
-    /*
-     * insert_mode: procedure;
-     * 
-     * Insert bytes in the buffer at current position.
-     * There can be one or several hexadecimal numbers on the line.
-     * They are separated by spaces and after the insertion
-     * the index is incremented.
-     * An empty string means the end of insertion.
-     *
-     */
-    insert_mode: procedure;
-        declare i byte;
-        declare j byte;
-        declare b byte;  /* input number */
-        declare c byte;  /* current character */
-        declare is$number boolean;
+/*
+ * insert_mode: procedure;
+ * 
+ * Insert bytes in the buffer at current position.
+ * There can be one or several hexadecimal numbers on the line.
+ * They are separated by spaces and after the insertion
+ * the index is incremented.
+ * An empty string means the end of insertion.
+ *
+ */
+insert_mode: procedure;
+    declare i byte;
+    declare j byte;
+    declare b byte;  /* input number */
+    declare c byte;  /* current character */
+    declare is$number boolean;
 
-        do while read_line(length(command), @command) <> 0;
-            i = 0;
-            j = 0;
-            is$number = false;
-            do while true;
-                if c = ' ' or c = 0 then
-                    if is$number then
-                    do;
-                        is$number = false;
-                        command(i) = 0;
-                        call print_string(@('found: ', 0));
-                        call print_line(@command(j));
-                        b = low(parse_hex(@command(j)));
-                        buf(index) = b;
-                        index = index + 1;
-                        if index > max$buf$len then
-                            goto loop$end;
-                    end;
-                else if not is$number then
+    do while read_line(length(command), @command) <> 0;
+        i = 0;
+        j = 0;
+        is$number = false;
+        do while true;
+            c = command(i);
+            if c = ' ' or c = 0 then
+            do;
+                if is$number then
                 do;
-                    is$number = true;
-                    j = i;   /* new number, save first index */
+                    is$number = false;
+                    b = low(parse_hex(@command(j)));
+                    buf(index) = b;
+                    if index >= buf$len then
+                        buf$len = index + 1;
+                    index = index + 1;
+                    if index > max$buf$len then
+                        goto loop$end;
                 end;
-                if c = 0 then
-                    goto loop$end;
-                i = i + 1;
             end;
+            else if not is$number then
+            do;
+                is$number = true;
+                j = i;   /* new number, save first index */
+            end;
+            if c = 0 then
+                goto loop$end;
+            i = i + 1;
         end;
 loop$end:
-    end insert_mode;
-
-    index = 0;
-    continue = true;
-    do while continue;
-        call print_string(@('SUBLEQ>', EOL));
-        if read_line(length(command), @command) <> 0 then
-        do;
-            if string_compare(@command, @('quit', 0)) = 0 then
-                continue = false;
-            else if string_compare(@command, @('insert', 0)) = 0 then
-                call insert_mode;
-            else
-                call print_line(@command);
-        end;
     end;
-    call terminate(0);
+end insert_mode;
+
+print$buf: procedure;
+    declare i uint;
+    i = 0;
+    do while i < buf$len;
+        call print_hex_byte(buf(i));
+        if i < buf$len - 1 then
+            call print_char(' ');
+        i = i + 1;
+    end;
+    call new_line;
+end print$buf;
+
+index = 0;
+buf$len = 0;
+continue = true;
+do while continue;
+    call print_string(@('SUBLEQ>', EOL));
+    if read_line(length(command), @command) <> 0 then
+    do;
+        if string_compare(@command, @('quit', 0)) = 0 then
+            continue = false;
+        else if string_compare(@command, @('insert', 0)) = 0 then
+            call insert_mode;
+        else
+            call print_line(@command);
+        call print$buf;
+    end;
 end;
-
+call terminate(0);
+
+end;
+
