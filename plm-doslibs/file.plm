@@ -1,0 +1,16 @@
+$if not file$lib
+$set (file$lib)
+
+truncate: procedure(file) integer;
+    declare file word;
+    declare b byte;
+    declare written uint;
+    if dos_write(file, @b, 0, @written) <> 0 then
+        return -1;
+    if written <> 0 then
+        return -1;
+    return 0;
+end truncate;
+
+$endif
+
