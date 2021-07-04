@@ -1,0 +1,77 @@
+chop:
+do;
+
+$include (c:\prog\plm\plmlib.inc)
+
+error: procedure(msg$ptr);
+    declare msg$ptr pointer;
+    call print_string(@('ERROR: ', 0));
+    call print_line(msg$ptr);
+    call terminate(-1);
+end error;
+
+declare fn (80) byte;
+declare f pointer;
+declare file$in word;
+declare file$out word;
+declare c byte;
+declare buff$length literally '20h';
+declare buff (buff$length) byte;
+declare actual word;
+declare written word;
+declare i word;
+
+call get_command_tail(@fn);
+
+/* TODO: finish when file library is ready
+ * meanwhile: temporary version, creates a new file '$.$'.
+if file_open(@f, @fn) then
+do;
+    do while not file_eof(f);
+        if not file_read(f, @c) then
+            call error(@('file read error', 0));
+        if c = 00h or c = 1Ah then
+        do;
+            if not file_truncate(f) then
+                call error(@('truncate error', 0));
+            goto loop$end;
+        end;
+    end;
+loop$end:
+    if not file_close(f) then
+        call error(@('error closing the file', 0));
+end;
+call terminate(0);
+*/
+
+if dos_open(@file$in, @fn, 0) <> 0 then
+    call error(@('ERROR: dos_open', 0));
+fn(0) = '$';
+fn(1) = '.';
+fn(2) = '$';
+fn(3) = 0;
+if dos_create(@file$out, @fn, 0) <> 0 then
+    call error(@('ERROR: dos_open', 0));
+do while true;
+    if dos_read(file$in, @buff, buff$length, @actual) <> 0 then
+        call error(@('ERROR: dos_read', 0));
+    do i = 0 to actual - 1;
+        if buff(i) <> 00h and buff(i) <> 1Ah then
+        do;
+            if dos_write(file$out, @buff(i), 1, @written) <> 0 then
+                call error(@('ERROR: dos_write', 0));
+        end;
+        else
+        do;
+            if dos_close(file$in) <> 0 then
+                call error(@('ERROR: dos_close', 0));
+            if dos_close(file$out) <> 0 then
+                call error(@('ERROR: dos_close', 0));
+            goto loop$end;
+        end;
+    end;
+end;
+loop$end:
+call terminate(0);
+end;
+
