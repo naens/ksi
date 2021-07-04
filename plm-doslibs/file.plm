@@ -1,16 +1,86 @@
-$if not file$lib
-$set (file$lib)
+$if not fh$lib
+$set (fh$lib)
 
-truncate: procedure(file) integer;
-    declare file word;
+declare max$files literally '5';
+declare files (max$files) word initial (0, 0, 0, 0, 0);
+
+file_open: procedure(file$ptr, fn$ptr) boolean;
+    declare file$ptr pointer;
+    declare file based file$ptr pointer;
+    declare fn$ptr pointer;
+    declare i uint;
+    /* file is the pointer to file handle, which is stored in the
+     * files array.  The file$ptr variable points to the location
+     * where the user stores 'file'.
+     * Other procedures use file and not file$ptr because they don't
+     * modify it.
+     */
+    i = 0;
+    do while files(i) <> 0 and i < max$files;
+        i = i + 1;
+    end;
+    if i < max$files then
+    do;
+        if dos_open(@files(i), fn$ptr, 2) = 0 then
+        do;
+            file = @files(i);
+            return true;
+        end;
+    end;
+    return false;
+end file_open;
+
+file_eof: procedure(file) boolean;
+    declare file pointer;
+    declare fh based file word;
+    return true;
+end file_eof;
+
+file_read: procedure(file, cptr) boolean;
+    declare file pointer;
+    declare fh based file word;
+    declare cptr pointer;
+    declare c based cptr byte;
+    declare n word;
+
+    if dos_read(fh, cptr, 1, @n) = 0 then
+    do;
+        if n = 1 then
+            return true;
+    end;
+    return false;
+end file_read;
+
+file_truncate: procedure(file) boolean;
+    declare file pointer;
+    declare fh based file word;
     declare b byte;
     declare written uint;
-    if dos_write(file, @b, 0, @written) <> 0 then
-        return -1;
+    if dos_write(fh, @b, 0, @written) <> 0 then
+        return false;
     if written <> 0 then
-        return -1;
-    return 0;
-end truncate;
+        return false;
+    return true;
+end file_truncate;
+
+file_close: procedure(file) boolean;
+    declare file pointer;
+    declare fh word;
+    declare i uint;
+    i = 1;
+    do while i < max$files and files(i) <> fh;
+        i = i + 1;
+    end;
+    if i < max$files then
+    do;
+        if dos_close(fh) = 0 then
+        do;
+            files(i) = 0;
+            return true;
+        end;
+    end;
+    return false;
+end file_close;
 
 $endif
-
+
