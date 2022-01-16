@@ -1,0 +1,10 @@
+plmtest:
+do;
+
+$include (:f2:tempo.inc)
+
+call print$line(.('abcd', 0));
+call print$char('$');
+call terminate(0);
+
+end plmtest;
